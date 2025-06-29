@@ -1,0 +1,1258 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>22. Introduction &#8212; Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/notebookstyle.css?v=3b045b9e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Notebooks/f1_score';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="27. Linear Regression" href="linear_regression.html" />
+    <link rel="prev" title="21. Information Content" href="Information_Content.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Notes</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/arithmetic_series.html">
+    Arithmetic Series
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/bash.html">
+    Bash
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/bibliography.html">
+    Bibliography
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/causal_inference.html">
+    Causality vs Correlation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/decorators.html">
+    Decorators
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/docker.html">
+    Docker
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/dockerfile.html">
+    Dockerfile
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/domain_generalisation.html">
+    Domain Generalisation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/eigenvalues_and_eigenvectors.html">
+    Eigenvalues and Eigenvectors
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/gamblers_ruin.html">
+    Gambler’s Ruin
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/generators_and_recursion.html">
+    Generators and Recursion
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/import_system.html">
+    The Python Import System
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/linux.html">
+    Linux
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/matrix_operations.html">
+    Matrix Operations
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/monads.html">
+    Monads
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/nqueens.html">
+    N-Queens
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/r_squared.html">
+    R Squared
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/regular_expressions.html">
+    Regular Expressions
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/shannon_entropy.html">
+    Shannon Entropy
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../Contents/terminal_commands.html">
+    Terminal Commands
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="Information_Content.html">
+    Information Content
+  </a>
+</li>
+
+
+<li class=" current active">
+  <a class="nav-link dropdown-item nav-internal" href="#">
+    Introduction
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="linear_regression.html">
+    Linear Regression
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="numpy_broadcasting.html">
+    Broadcasting in Numpy
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="snippets.html">
+    Snippets
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/arithmetic_series.html">
+    Arithmetic Series
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/bash.html">
+    Bash
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/bibliography.html">
+    Bibliography
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/causal_inference.html">
+    Causality vs Correlation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/decorators.html">
+    Decorators
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/docker.html">
+    Docker
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/dockerfile.html">
+    Dockerfile
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/domain_generalisation.html">
+    Domain Generalisation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/eigenvalues_and_eigenvectors.html">
+    Eigenvalues and Eigenvectors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/gamblers_ruin.html">
+    Gambler’s Ruin
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/generators_and_recursion.html">
+    Generators and Recursion
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/import_system.html">
+    The Python Import System
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/linux.html">
+    Linux
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/matrix_operations.html">
+    Matrix Operations
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/monads.html">
+    Monads
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/nqueens.html">
+    N-Queens
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/r_squared.html">
+    R Squared
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/regular_expressions.html">
+    Regular Expressions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/shannon_entropy.html">
+    Shannon Entropy
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Contents/terminal_commands.html">
+    Terminal Commands
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="Information_Content.html">
+    Information Content
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="linear_regression.html">
+    Linear Regression
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="numpy_broadcasting.html">
+    Broadcasting in Numpy
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="snippets.html">
+    Snippets
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><span class="section-number">22. </span>Introduction</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Introduction">
+<h1><span class="section-number">22. </span>Introduction<a class="headerlink" href="#Introduction" title="Link to this heading">#</a></h1>
+<p>This article covers:</p>
+<ul class="simple">
+<li><p>Precision</p></li>
+<li><p>Recall</p></li>
+<li><p>F1 Score</p></li>
+</ul>
+</section>
+<section id="Motivation">
+<h1><span class="section-number">23. </span>Motivation<a class="headerlink" href="#Motivation" title="Link to this heading">#</a></h1>
+<p>Suppose we are tasked with detecting anomalies in the following dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+
+n = 200
+f = 4  # Frequency
+
+x = np.cos(np.linspace(0, 2 * f * np.pi, n))
+x[50] = 2
+x[75] = -1.5
+
+y = np.zeros(n)
+y[50] = 1
+y[75] = 1
+
+outlier_pos = np.argwhere(y)[:, 0]
+
+fig, ax = plt.subplots()
+ax.plot(x)
+ax.scatter(outlier_pos, x[outlier_pos], color=&quot;tab:orange&quot;, label=&quot;outliers&quot;)
+ax.legend()
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7f928fd5fca0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/Notebooks_f1_score_1_1.png" src="../_images/Notebooks_f1_score_1_1.png" />
+</div>
+</div>
+<p>Our dataset <code class="docutils literal notranslate"><span class="pre">x</span></code> has two outliers. Let us use a simple threshold to find these outliers. A threshold of 1.75 means our model will only capture one of the outliers.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def find_outliers(x, threshold=1.5):
+    return (x &gt;= threshold) | (x &lt;= - threshold)
+
+y_hat = find_outliers(x, 1.75)
+print(&quot;Number of outliers found:&quot;, sum(y_hat))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Number of outliers found: 1
+</pre></div></div>
+</div>
+<p>Now let us calculate the accuracy of our predictions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>(y == y_hat).mean()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.995
+</pre></div></div>
+</div>
+<p>The model is 99.5% accuracy. But since this is an outlier detection problem, we know that outliers are going to be rare so have a model that can find the <em>not anomalous</em> points is not very useful.</p>
+<p>In fact, in this example, if our model simply predicted <em>not anomalous</em> all the time, then it would have an accuract of 99% since there are 200 data points and 2 anomalies. This highlights the limitations of using accuracy in some problems. What we can use instead is precision and recall.</p>
+<section id="Precision">
+<h2><span class="section-number">23.1. </span>Precision<a class="headerlink" href="#Precision" title="Link to this heading">#</a></h2>
+<p>Precision is a measure of the proportion of predicted positives that were actually true positives.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from IPython.core.display import Image
+from IPython.display import display
+
+display(Image(url=&#39;Images/precision.png&#39;, width=200))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<img src="Images/precision.png" width="200"/></div>
+</div>
+<p>The formula for precisions is:</p>
+<div class="math notranslate nohighlight">
+\[\text{precision} = \frac{\text{TP}}{\text{TP + FP}}\]</div>
+<p>Let us calculate precision for our example.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tp = ((y == 1) &amp; (y_hat == 1)).sum()
+fp = ((y == 0) &amp; (y_hat == 1)).sum()
+
+print(f&quot;TP: {tp},  FP: {fp}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+TP: 1,  FP: 0
+</pre></div></div>
+</div>
+<p>So, the precisions is:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>precision = tp / (tp + fp)
+print(f&quot;Precision: {precision}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Precision: 1.0
+</pre></div></div>
+</div>
+<p>So, the precision higher than the accuracy. This metric still misses the fact that one of the true positives has been missed. This is where recall comes in.</p>
+</section>
+<section id="Recall">
+<h2><span class="section-number">23.2. </span>Recall<a class="headerlink" href="#Recall" title="Link to this heading">#</a></h2>
+<p>Recall is the proportion of actuall positives that were predicted to be positive. It involes true positives and false negatives.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from IPython.core.display import Image
+from IPython.display import display
+
+display(Image(url=&#39;Images/recall.png&#39;, width=200))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<img src="Images/recall.png" width="200"/></div>
+</div>
+<p>The formula for recall is:</p>
+<div class="math notranslate nohighlight">
+\[\text{recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}\]</div>
+<p>Let us calculate recall for our example.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tp = ((y == 1) &amp; (y_hat == 1)).sum()
+fn = ((y == 1) &amp; (y_hat == 0)).sum()
+
+recall = tp / (tp + fn)
+
+print(recall)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.5
+</pre></div></div>
+</div>
+<p>Our model detect one anomaly correctly but detected the other incorrectly to recall reflects reflects that property well.</p>
+<p>Recall does not take into account false positives though which may be important. F1 score combines both precision and recall.</p>
+</section>
+<section id="F1-Score">
+<h2><span class="section-number">23.3. </span>F1 Score<a class="headerlink" href="#F1-Score" title="Link to this heading">#</a></h2>
+<p>F1 score is the harmonic mean of precision and recall. We will discuss the harmonic mean later on but for now let create our own version of F1 score using the arithmetic mean (add up your numbers and divide by how many there are). So, the formula for our version of F1 score which we will call <span class="math notranslate nohighlight">\(\hat{F1}\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[\hat{F1} = \frac{\text{precision} + \text{recall}}{2}\]</div>
+<p>Let us calculate <span class="math notranslate nohighlight">\(\hat{F1}\)</span> for our model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tp = ((y == 1) &amp; (y_hat == 1)).sum()
+fp = ((y == 0) &amp; (y_hat == 1)).sum()
+fn = ((y == 1) &amp; (y_hat == 0)).sum()
+
+precision = tp / (tp + fp)
+recall = tp / (tp + fn)
+
+f1_hat = (precision + recall) / 2
+
+print(f&quot;F1 hat: {f1_hat}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+F1 hat 0.75
+</pre></div></div>
+</div>
+<p><span class="math notranslate nohighlight">\(\hat{F1}\)</span> is slightly higher than recall, so our score has been increased because the model did not predict any false positives.</p>
+</section>
+</section>
+<section id="id1">
+<h1><span class="section-number">24. </span>F1 Score<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>F1 score is a method for quantifying the performance of a model. It is typically used for binarcy classification but F1 score can be extended to multiclass problems as well.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%pip install numpy scikit-learn matplotlib
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requirement already satisfied: numpy in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (1.26.4)
+Requirement already satisfied: scikit-learn in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (1.5.0)
+Requirement already satisfied: matplotlib in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (3.8.3)
+Requirement already satisfied: scipy&gt;=1.6.0 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from scikit-learn) (1.13.1)
+Requirement already satisfied: joblib&gt;=1.2.0 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from scikit-learn) (1.4.2)
+Requirement already satisfied: threadpoolctl&gt;=3.1.0 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from scikit-learn) (3.5.0)
+Requirement already satisfied: cycler&gt;=0.10 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: kiwisolver&gt;=1.3.1 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from matplotlib) (1.4.5)
+Requirement already satisfied: pyparsing&gt;=2.3.1 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from matplotlib) (3.1.2)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from matplotlib) (2.9.0.post0)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from matplotlib) (4.49.0)
+Requirement already satisfied: packaging&gt;=20.0 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from matplotlib) (24.0)
+Requirement already satisfied: pillow&gt;=8 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from matplotlib) (10.2.0)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from matplotlib) (1.2.0)
+Requirement already satisfied: six&gt;=1.5 in /home/alex/documents/notes/.venv/lib/python3.10/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.16.0)
+Note: you may need to restart the kernel to use updated packages.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn import linear_model
+</pre></div>
+</div>
+</div>
+<p>Let us create a toy dataset classifying two gaussian distributions.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n = 50
+x = np.concatenate([
+    np.random.normal([1, 0], 1, size=(n, 2)),
+    np.random.normal([-1, 0], 1, size=(n, 2))
+])
+y = np.asarray([0] * n + [1] * n)
+</pre></div>
+</div>
+</div>
+<p>Plot <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.scatter(x[:n, 0], x[:n, 1], color=&quot;tab:orange&quot;, label=0)
+plt.scatter(x[n:, 0], x[n:, 1], color=&quot;tab:blue&quot;, label=1)
+plt.legend()
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7f8815f77790&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/Notebooks_f1_score_25_1.png" src="../_images/Notebooks_f1_score_25_1.png" />
+</div>
+</div>
+<p>Let us train a logistic regression model on this data.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model = linear_model.LogisticRegression()
+model.fit(x, y)
+y_hat = model.predict(x)
+</pre></div>
+</div>
+</div>
+<p>Plot the predictions and the true labels.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(1, 2, figsize=(10, 4))
+
+ax[0].scatter(x[n:, 0], x[n:, 1], label=0)
+ax[0].scatter(x[:n, 0], x[:n, 1], label=1)
+ax[0].legend()
+ax[0].set_title(&quot;Ground Truth&quot;)
+
+ax[1].scatter(x[y_hat == 0, 0], x[y_hat == 0, 1], label=0)
+ax[1].scatter(x[y_hat == 1, 0], x[y_hat == 1, 1], label=1)
+ax[1].legend()
+ax[1].set_title(&quot;Predictions&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Predictions&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/Notebooks_f1_score_29_1.png" src="../_images/Notebooks_f1_score_29_1.png" />
+</div>
+</div>
+<p>The model clearly gets several predictions wrong. We can break our predictions, <code class="docutils literal notranslate"><span class="pre">y_hat</span></code>, down into for categories:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">y_hat</span></code> is 1 and <code class="docutils literal notranslate"><span class="pre">y_hat</span></code> is 1 (true positive).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_hat</span></code> is 1 and <code class="docutils literal notranslate"><span class="pre">y_hat</span></code> is 0 (false negative).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_hat</span></code> is 0 and <code class="docutils literal notranslate"><span class="pre">y_hat</span></code> is 1 (false positive).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_hat</span></code> is 0 and <code class="docutils literal notranslate"><span class="pre">y_hat</span></code> is 0 (true negative).</p></li>
+</ol>
+<p>Let us calculate these quantitites for our model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>true_pos = np.sum((y == 1) &amp; (y_hat == 1))
+true_neg = np.sum((y == 0) &amp; (y_hat == 0))
+false_pos = np.sum((y == 0) &amp; (y_hat == 1))
+false_neg = np.sum((y == 1) &amp; (y_hat == 0))
+
+print(f&quot;true_pos: {true_pos},  true_neg: {true_neg},  false_pos: {false_pos},  false_neg: {false_neg}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+true_pos: 44,  true_neg: 40,  false_pos: 10,  false_neg: 6
+</pre></div></div>
+</div>
+<p>Our model gives mostly true positives and true negatives which is good. When assessing the quality of the model, our appetite for false positives and false negatives may depend on our application. For example:</p>
+<ul class="simple">
+<li><p>If 1 means a patients has a disease and 0 means they don’t, we may be more willing to accept false positives than false negatives.</p></li>
+</ul>
+</section>
+<section id="Precision-and-Recall">
+<h1><span class="section-number">25. </span>Precision and Recall<a class="headerlink" href="#Precision-and-Recall" title="Link to this heading">#</a></h1>
+<p>Precisions and recall is a way of comparing the actual results with the predicted results.</p>
+<div class="math notranslate nohighlight">
+\[\text{precision} = \frac{\text{true positive}}{\text{true positive} + \text{false positive}}, \quad
+\text{recall} = \frac{\text{true positive}}{\text{true positive} + \text{false negative}}\]</div>
+<ul class="simple">
+<li><p>Precision is the proportion of positive predictions that were actually positive.</p></li>
+<li><p>Recall is the proportion of actual positives that were predicted to be positive.</p></li>
+</ul>
+<p>Let us write functions to calculate precision and recall.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def calculate_precision(y, y_hat):
+    true_pos = np.sum((y == 1) &amp; (y_hat == 1))
+    false_pos = np.sum((y == 0) &amp; (y_hat == 1))
+    return true_pos / (true_pos + false_pos)
+
+def calculate_recall(y, y_hat):
+    true_pos = np.sum((y == 1) &amp; (y_hat == 1))
+    false_neg = np.sum((y == 1) &amp; (y_hat == 0))
+    return true_pos / (true_pos + false_neg)
+
+precision = calculate_precision(y, y_hat)
+recall = calculate_recall(y, y_hat)
+
+print(f&quot;Precision: {precision},  Recall: {recall}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Precision: 0.8148148148148148,  Recall: 0.88
+</pre></div></div>
+</div>
+<p>Precisions would be 1 if we had 0 false positives. Recall would be 1 if we had 0 false negatives.</p>
+</section>
+<section id="id2">
+<h1><span class="section-number">26. </span>F1 Score<a class="headerlink" href="#id2" title="Link to this heading">#</a></h1>
+<p>F1 score is the harmonic mean of precision and recall. Let us first recall the definition of harmonic mean. Suppose we have a sequence of numbers <span class="math notranslate nohighlight">\(x_1, x_2, \dots, x_n\)</span>. The harmonic mean of this set of numbers is,</p>
+<div class="math notranslate nohighlight">
+\[\frac{n}{x_1^{-1} + x_2^{-1} + \dots + x_n^{-1}}\]</div>
+<p>So, the harmonic mean of precision and recall (F1 score) is,</p>
+<div class="math notranslate nohighlight">
+\[F1 = \frac{2}{\text{precision}^{-1} + \text{recall}^{-1}} = 2 \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}} = \frac{\text{2 tp}}{\text{2 tp} + fp + fn}\]</div>
+<p>Let us write a function for calculate the F1 score.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[62]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def calculate_f1(y, y_hat):
+    recall = calculate_recall(y, y_hat)
+    precision = calculate_precision(y, y_hat)
+    return 2 * (precision * recall) / (precision + recall)
+
+f1_score = calculate_f1(y, y_hat)
+print(f&quot;F1 score: {f1_score}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+F1 score: 0.8461538461538461
+</pre></div></div>
+</div>
+<p>Why is the harmonic mean used when calculating f1 score as opposed to the arithmetic mean?</p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Information_Content.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">21. </span>Information Content</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="linear_regression.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">27. </span>Linear Regression</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">22. Introduction</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Motivation">23. Motivation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Precision">23.1. Precision</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Recall">23.2. Recall</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#F1-Score">23.3. F1 Score</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">24. F1 Score</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Precision-and-Recall">25. Precision and Recall</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">26. F1 Score</a></li>
+</ul>
+
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/Notebooks/f1_score.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Alex Gregory.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
