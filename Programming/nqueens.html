@@ -1,0 +1,922 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>11. N-Queens &#8212; Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/notebookstyle.css?v=3b045b9e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Programming/nqueens';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="12. Broadcasting in Numpy" href="numpy_broadcasting.html" />
+    <link rel="prev" title="10. Monads" href="monads.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Notes</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Maths/index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Maths/index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="bash.html">1. Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html">2. Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">3. Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dockerfile.html">4. Dockerfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generators.html">5. Binary operators</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="generators_and_recursion.html">7. Generators and Recursion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="import_system.html">8. The Python Import System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux.html">9. Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monads.html">10. Monads</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">11. N-Queens</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_broadcasting.html">12. Broadcasting in Numpy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regular_expressions.html">13. Regular Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminal_commands.html">14. Terminal Commands</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Programming</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><span class="section-number">11. </span>N-Queens</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="n-queens">
+<h1><span class="section-number">11. </span>N-Queens<a class="headerlink" href="#n-queens" title="Link to this heading">#</a></h1>
+<section id="bitwise-operators-in-python">
+<h2><span class="section-number">11.1. </span>Bitwise Operators in Python<a class="headerlink" href="#bitwise-operators-in-python" title="Link to this heading">#</a></h2>
+<p>One can get the binary string for an integer using f-strings.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;1:b&quot;</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;2:b&quot;</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;3:b&quot;</span>
+<span class="go">11</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;4:b&quot;</span>
+<span class="go">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;9:b&quot;</span>
+<span class="go">1001</span>
+</pre></div>
+</div>
+<p>When reading the binary representation, start from the right. So,
+<code class="code docutils literal notranslate"><span class="pre">1001</span></code> is <code class="code docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">8</span></code>.</p>
+<p>There are several bitwise operators in python. Here are some examples for the
+<cite>and</cite> and <cite>or</cite> operators.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">&#39;11&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">&#39;101&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;x|y : </span><span class="si">{</span><span class="n">x</span><span class="o">|</span><span class="n">y</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">x</span><span class="o">|</span><span class="n">y</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">&#39;x|y : 7 : 111&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;x&amp;y : </span><span class="si">{</span><span class="n">x</span><span class="o">&amp;</span><span class="n">y</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">x</span><span class="o">&amp;</span><span class="n">y</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">&#39;x&amp;y : 1 : 1&#39;</span>
+</pre></div>
+</div>
+<p>The operators are for shifting bits left and right: <code class="code docutils literal notranslate"><span class="pre">x</span> <span class="pre">&lt;&lt;</span> <span class="pre">y</span></code> shifts
+<code class="code docutils literal notranslate"><span class="pre">x</span></code>’s bits to the <em>left</em> by <code class="code docutils literal notranslate"><span class="pre">y</span></code> places, and <code class="code docutils literal notranslate"><span class="pre">x</span> <span class="pre">&lt;&lt;</span> <span class="pre">y</span></code> shifts
+<code class="code docutils literal notranslate"><span class="pre">x</span></code>’s bits to the <em>right</em> by <code class="code docutils literal notranslate"><span class="pre">y</span></code> places.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">&#39;11&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">&#39;110&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">&#39;1100&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">&#39;1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">2</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">&#39;0&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="solving-n-queens-in-a-functional-way">
+<h2><span class="section-number">11.2. </span>Solving N-Queens in a Functional Way<a class="headerlink" href="#solving-n-queens-in-a-functional-way" title="Link to this heading">#</a></h2>
+<p>In the cpython testing suite, there is a class for solving the N-Queens problem
+called <code class="code docutils literal notranslate"><span class="pre">Queens</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Queens</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="n">rangen</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+        <span class="c1"># Assign a unique int to each column and diagonal.</span>
+        <span class="c1"># columns:  n of those, range(n).</span>
+        <span class="c1"># NW-SE diagonals: 2n-1 of these, i-j unique and invariant along</span>
+        <span class="c1"># each, smallest i-j is 0-(n-1) = 1-n, so add n-1 to shift to 0-</span>
+        <span class="c1"># based.</span>
+        <span class="c1"># NE-SW diagonals: 2n-1 of these, i+j unique and invariant along</span>
+        <span class="c1"># each, smallest i+j is 0, largest is 2n-2.</span>
+
+        <span class="c1"># For each square, compute a bit vector of the columns and</span>
+        <span class="c1"># diagonals it covers, and for each row compute a function that</span>
+        <span class="c1"># generates the possibilities for the columns in that row.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rowgenerators</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rangen</span><span class="p">:</span>
+            <span class="n">rowuses</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">j</span><span class="p">)</span> <span class="o">|</span>                  <span class="c1"># column ordinal</span>
+                       <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="n">i</span><span class="o">-</span><span class="n">j</span> <span class="o">+</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">|</span>    <span class="c1"># NW-SE ordinal</span>
+                       <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">))</span>    <span class="c1"># NE-SW ordinal</span>
+                            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">rangen</span><span class="p">]</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">rowgen</span><span class="p">(</span><span class="n">rowuses</span><span class="o">=</span><span class="n">rowuses</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">rangen</span><span class="p">:</span>
+                    <span class="n">uses</span> <span class="o">=</span> <span class="n">rowuses</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">uses</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">used</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">used</span> <span class="o">|=</span> <span class="n">uses</span>
+                        <span class="k">yield</span> <span class="n">j</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">used</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">uses</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">rowgenerators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rowgen</span><span class="p">)</span>
+
+    <span class="c1"># Generate solutions.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">used</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">row2col</span> <span class="ow">in</span> <span class="n">conjoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowgenerators</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">row2col</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">printsolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row2col</span><span class="p">):</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
+        <span class="k">assert</span> <span class="n">n</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">row2col</span><span class="p">)</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;+&quot;</span> <span class="o">+</span> <span class="s2">&quot;-+&quot;</span> <span class="o">*</span> <span class="n">n</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">squares</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &quot;</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+            <span class="n">squares</span><span class="p">[</span><span class="n">row2col</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;Q&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;|&quot;</span> <span class="o">+</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">squares</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;|&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let us talk through how this code works. The constructor has the argument
+<code class="code docutils literal notranslate"><span class="pre">n</span></code> which is the size of the board. A list called <code class="code docutils literal notranslate"><span class="pre">rowgenerators</span></code>
+is then created which stores the columns, and diagonals that are covered by
+each square. The columns/diagonals covered by each square are stored as a
+binary strings created in the <code class="code docutils literal notranslate"><span class="pre">rowuses</span></code> list comprehension.</p>
+</section>
+<section id="representing-the-board-in-rowuses">
+<h2><span class="section-number">11.3. </span>Representing the board in <code class="code docutils literal notranslate"><span class="pre">rowuses</span></code><a class="headerlink" href="#representing-the-board-in-rowuses" title="Link to this heading">#</a></h2>
+<p>The <code class="code docutils literal notranslate"><span class="pre">rowuses</span></code> variable is a list where each element represents the
+columns, NE-SW, and NW-SE diagonals that are covered by each square in the row.
+The coverage of each square is encoded in a binary string. Let us breakdown the
+operations that make these strings by first looking at an example. Let us look
+at the output for the first row when <code class="code docutils literal notranslate"><span class="pre">n</span></code> is 4.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rowuses</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">j</span><span class="p">)</span> <span class="o">|</span>
+<span class="gp">... </span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="n">i</span><span class="o">-</span><span class="n">j</span> <span class="o">+</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">|</span>
+<span class="gp">... </span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">))</span>
+<span class="gp">... </span><span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">rangen</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rowuses</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2177</span><span class="p">,</span> <span class="mi">4162</span><span class="p">,</span> <span class="mi">8228</span><span class="p">,</span> <span class="mi">16408</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The list <code class="code docutils literal notranslate"><span class="pre">rowuses</span></code> is a list of seemingly random integers. These integers
+represent the columns and diagonals that each square in the first row cover.
+Look at the binary representation of the first number.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">2177</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">&#39;100010000001&#39;</span>
+</pre></div>
+</div>
+<p>This string contains has three 1’s. The top left square covers 1 column, 1
+NW-SE diagonal, and 1 NE-SW diagonal. Perhaps each of these 1’s represent the
+columns and diagonals? In fact, the right most digit is a 1, perhaps this means
+the first column is covered?</p>
+<p>We have a few ideas so let us breakdown what each term in the list
+comprehension does.</p>
+</section>
+<section id="term-1-1-j">
+<h2><span class="section-number">11.4. </span>Term 1 <code class="code docutils literal notranslate"><span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">j)</span></code><a class="headerlink" href="#term-1-1-j" title="Link to this heading">#</a></h2>
+<p>In the comment, it says the first term is for the column ordinal. In other
+words, the first term deals with representing the columns that are covered. Let
+us check the values of <code class="code docutils literal notranslate"><span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">j)</span></code> for the different values of <code class="code docutils literal notranslate"><span class="pre">j</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">0</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">3</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">1000</span>
+</pre></div>
+</div>
+<p>These binary strings are used to represent covers columns 1, 2, 3, and 4
+respectively. In the binary for the top left square, <code class="code docutils literal notranslate"><span class="pre">100010000001</span></code>, the
+1 on the right tells us this square covers the first column.</p>
+</section>
+<section id="term-2-1-n-i-j-n-1">
+<h2><span class="section-number">11.5. </span>Term 2 <code class="code docutils literal notranslate"><span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">n</span> <span class="pre">+</span> <span class="pre">i-j</span> <span class="pre">+</span> <span class="pre">n-1)</span></code><a class="headerlink" href="#term-2-1-n-i-j-n-1" title="Link to this heading">#</a></h2>
+<p>This term handles the NW-SE diagonals. Recall the comment about the NW-SE
+diagonals.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># NW-SE diagonals: 2n-1 of these, i-j unique and invariant along</span>
+<span class="c1"># each, smallest i-j is 0-(n-1) = 1-n, so add n-1 to shift to 0-</span>
+<span class="c1"># based.</span>
+</pre></div>
+</div>
+<p>Let us break down each part of this comment. There are <code class="code docutils literal notranslate"><span class="pre">2n-1</span></code> NW-SE
+diagonals. There are <code class="code docutils literal notranslate"><span class="pre">n-1</span></code> NW-SE diagonals that start on the left side of
+the board (not including the diagonal) and there are <code class="code docutils literal notranslate"><span class="pre">n-1</span></code> NW-SE
+diagonals that start along the top of the board (not including the diagonal).
+Including the diagonal, we have <code class="code docutils literal notranslate"><span class="pre">n-1</span> <span class="pre">+</span> <span class="pre">n-1</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">=</span> <span class="pre">2n-1</span></code> NW-SE diagonals.</p>
+<p>Taking the column index <code class="code docutils literal notranslate"><span class="pre">j</span></code> from the row index <code class="code docutils literal notranslate"><span class="pre">i</span></code> gives a unique
+integer for each diagonal that does not change along the diagonal. Let us write
+out <code class="code docutils literal notranslate"><span class="pre">i-j</span></code> for <code class="code docutils literal notranslate"><span class="pre">n</span></code> is <code class="code docutils literal notranslate"><span class="pre">4</span></code>.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>-1</p></td>
+<td><p>-2</p></td>
+<td><p>-3</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>-1</p></td>
+<td><p>-2</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>-1</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>There is a unique integer for each NW-SE diagonal and the integer does not
+change along the diagonal. Negative integers are handled slightly differently
+in python, so to keep everything simple add a buffer of <code class="code docutils literal notranslate"><span class="pre">n-1</span></code>. Doing
+this, the matrix becomes.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>4</p></td>
+<td><p>3</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>5</p></td>
+<td><p>4</p></td>
+<td><p>3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>So, in <code class="code docutils literal notranslate"><span class="pre">1</span> <span class="pre">&lt;&lt;</span> <span class="pre">n</span> <span class="pre">+</span> <span class="pre">i-j</span> <span class="pre">+</span> <span class="pre">n-1</span></code>, the term <code class="code docutils literal notranslate"><span class="pre">i-j</span></code> uniquely represents the
+NW-SE diagonal that the square covers and <code class="code docutils literal notranslate"><span class="pre">n-1</span></code> is used to make the
+negative <code class="code docutils literal notranslate"><span class="pre">i-j</span></code>’s positive. So what does the final <code class="code docutils literal notranslate"><span class="pre">n</span></code> do? The final
+<code class="code docutils literal notranslate"><span class="pre">n</span></code> is to make sure the digits from the <code class="code docutils literal notranslate"><span class="pre">1</span> <span class="pre">&lt;&lt;</span> <span class="pre">j</span></code> term are not
+overwritten.</p>
+<p>So, <code class="code docutils literal notranslate"><span class="pre">i</span> <span class="pre">&lt;&lt;</span> <span class="pre">n</span> <span class="pre">+</span> <span class="pre">i-j</span> <span class="pre">+</span> <span class="pre">n-1</span></code> turns on the bit which uniquely represents the
+NW-SE diagonal that the square covers without overwriting the bit which covers
+the column the square covers.</p>
+<p>What is the minimum value of <code class="code docutils literal notranslate"><span class="pre">1</span> <span class="pre">&lt;&lt;</span> <span class="pre">n</span> <span class="pre">+</span> <span class="pre">i-j</span> <span class="pre">+</span> <span class="pre">n-1</span></code>? The minimum value
+occurs when <code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> are zero. When <code class="code docutils literal notranslate"><span class="pre">n</span></code> is <code class="code docutils literal notranslate"><span class="pre">4</span></code>, this
+means,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">0</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">&#39;10000000&#39;</span>
+</pre></div>
+</div>
+<p>Including the first term, we get,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">0</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="go">&#39;10000001&#39;</span>
+</pre></div>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">1</span></code> on the right represents the first column being covered, the
+<code class="code docutils literal notranslate"><span class="pre">1</span></code> on the left represents the main diagonal being covered.</p>
+</section>
+<section id="term-3-1-n-2-n-1-i-j">
+<h2><span class="section-number">11.6. </span>Term 3 <code class="code docutils literal notranslate"><span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">(n</span> <span class="pre">+</span> <span class="pre">2*n-1</span> <span class="pre">+</span> <span class="pre">i+j))</span></code><a class="headerlink" href="#term-3-1-n-2-n-1-i-j" title="Link to this heading">#</a></h2>
+<p>Term 3 is very similar to term 2. This term covers the NE-SW diagonals. Recall
+the comment for these diagonals.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># NE-SW diagonals: 2n-1 of these, i+j unique and invariant along</span>
+<span class="c1"># each, smallest i+j is 0, largest is 2n-2.</span>
+</pre></div>
+</div>
+<p>By the same logic as before, there are <code class="code docutils literal notranslate"><span class="pre">2n-1</span></code> NE-SW diagonals. Let us
+write out the <code class="code docutils literal notranslate"><span class="pre">i</span> <span class="pre">+</span> <span class="pre">j</span></code> terms when <code class="code docutils literal notranslate"><span class="pre">n</span></code> is 4.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>3</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>3</p></td>
+<td><p>4</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>4</p></td>
+<td><p>5</p></td>
+<td><p>6</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Each NE-SW diagonal is represented by a unique integer. All these integers are
+positive, so we do not have to add <code class="code docutils literal notranslate"><span class="pre">n-1</span></code> like before. So, in term 3,
+<code class="code docutils literal notranslate"><span class="pre">i+j</span></code> is used to uniquely identify the NE-SW diagonal.</p>
+<p>We still need to make sure we do not overwrite the <code class="code docutils literal notranslate"><span class="pre">1</span></code>’s from term 1 and
+term 2. This is done by adding <code class="code docutils literal notranslate"><span class="pre">n</span> <span class="pre">+</span> <span class="pre">2*n-1</span></code> to <code class="code docutils literal notranslate"><span class="pre">i+j</span></code>. Similar to
+before <code class="code docutils literal notranslate"><span class="pre">n</span></code> ensures we do not overwrite the bits from term 1, but what
+about <code class="code docutils literal notranslate"><span class="pre">2*n-1</span></code>?</p>
+<p>From term 2, the maximum value of <code class="code docutils literal notranslate"><span class="pre">i-j</span> <span class="pre">+</span> <span class="pre">n-1</span></code> is <code class="code docutils literal notranslate"><span class="pre">n-1</span> <span class="pre">-</span> <span class="pre">0</span> <span class="pre">+</span> <span class="pre">n-1</span> <span class="pre">=</span>
+<span class="pre">2*n-2</span></code>. So, adding <code class="code docutils literal notranslate"><span class="pre">2*n-1</span></code> ensures that we do not overwrite the <code class="code docutils literal notranslate"><span class="pre">1</span></code>
+from term 2.</p>
+</section>
+<section id="the-rowgen-method">
+<h2><span class="section-number">11.7. </span>The <code class="code docutils literal notranslate"><span class="pre">rowgen</span></code> Method<a class="headerlink" href="#the-rowgen-method" title="Link to this heading">#</a></h2>
+<p>Recall the <code class="code docutils literal notranslate"><span class="pre">rowgen</span></code> method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">rowgen</span><span class="p">(</span><span class="n">rowuses</span><span class="o">=</span><span class="n">rowuses</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">rangen</span><span class="p">:</span>
+        <span class="n">uses</span> <span class="o">=</span> <span class="n">rowuses</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">uses</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">used</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">used</span> <span class="o">|=</span> <span class="n">uses</span>
+            <span class="k">yield</span> <span class="n">j</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">used</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">uses</span>
+</pre></div>
+</div>
+<p>The argument for <code class="code docutils literal notranslate"><span class="pre">rowgen</span></code> is <code class="code docutils literal notranslate"><span class="pre">rowuses</span></code> which is the list of
+integers integer that encode the columns, NW-SE diagonals, and NE-SW diagonals
+that each square in the row covers. The method is also a <em>generator function</em>
+since it uses the <code class="code docutils literal notranslate"><span class="pre">yield</span></code> keyword.</p>
+<p>This method changes the attribute <code class="code docutils literal notranslate"><span class="pre">self.used</span></code> which is uninitialised in
+<code class="code docutils literal notranslate"><span class="pre">__init__</span></code>. This variable is not initialised until <code class="code docutils literal notranslate"><span class="pre">solve</span></code> is
+called. The <code class="code docutils literal notranslate"><span class="pre">self.used</span></code> is another integer which encodes the columns,
+NE-SW, and NW-SE diagonals that are covered in the current solution.</p>
+<p>So what does this method do?</p>
+<ol class="arabic simple">
+<li><p>Iterates through each square in the row. Squares are referred to by their
+column index <code class="code docutils literal notranslate"><span class="pre">j</span></code>.</p></li>
+<li><p>Checks if the square, <code class="code docutils literal notranslate"><span class="pre">j</span></code>, is covered by some other queen in the
+solution.</p></li>
+<li><p>If the square, <code class="code docutils literal notranslate"><span class="pre">j</span></code> is not covered, add a queen there and thus add the
+columns, NE-SW, and NW-SE diagonals covered by <cite>j</cite> to the covered squares in
+<code class="code docutils literal notranslate"><span class="pre">self.used</span></code>.</p></li>
+<li><p>Yield <code class="code docutils literal notranslate"><span class="pre">j</span></code>.</p></li>
+<li><p>After <code class="code docutils literal notranslate"><span class="pre">j</span></code> is yielded, remove the columns, NE-SW, and NW-SE diagonals
+covered by <code class="code docutils literal notranslate"><span class="pre">j</span></code> from the covered columns and diagonals in
+<code class="code docutils literal notranslate"><span class="pre">self.used</span></code>.</p></li>
+<li><p>Try the next square and see if a queen can be put in it.</p></li>
+<li><p>Repeat from step 2.</p></li>
+</ol>
+<p>The row generators for each row are stored in a list.</p>
+</section>
+<section id="finding-the-solutions">
+<h2><span class="section-number">11.8. </span>Finding the Solutions<a class="headerlink" href="#finding-the-solutions" title="Link to this heading">#</a></h2>
+<p>Solutions are found in the <code class="code docutils literal notranslate"><span class="pre">solve</span></code> method. Recall the <code class="code docutils literal notranslate"><span class="pre">solve</span></code>
+method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate solutions.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">used</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">row2col</span> <span class="ow">in</span> <span class="n">conjoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rowgenerators</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">row2col</span>
+</pre></div>
+</div>
+<p>This method is very short. In fact it implements a backtracking method to find
+the solutions using the <code class="code docutils literal notranslate"><span class="pre">conjoin</span></code> method. In the same
+<code class="code docutils literal notranslate"><span class="pre">Lib/test/test_generators.py</span></code> script there is simplified <code class="code docutils literal notranslate"><span class="pre">conjoin</span></code>
+method. This method does the same thing as <code class="code docutils literal notranslate"><span class="pre">conjoin</span></code> but, as the name
+suggests, in a simpler way; so we will limit our discussion to
+<code class="code docutils literal notranslate"><span class="pre">simple_conjoin</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">simple_conjoin</span><span class="p">(</span><span class="n">gs</span><span class="p">):</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gs</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">[</span><span class="n">i</span><span class="p">]():</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">x</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">simple_conjoin</span></code> takes a list of generator functions as arguments. It
+then dynamically iterates through the iterators. We limit our discussion to
+just our N-queens problem.</p>
+<p>So, <code class="code docutils literal notranslate"><span class="pre">gs</span></code> is our list of row generators which iterators through the
+columns of a row and yield <code class="code docutils literal notranslate"><span class="pre">j</span></code> if a queen can be put in the <code class="code docutils literal notranslate"><span class="pre">j</span></code>-th
+column given the current solution. For a 4x4 N-queens grid there will be 4
+elements in <code class="code docutils literal notranslate"><span class="pre">gs</span></code> - one for each row.</p>
+<p>The variables <code class="code docutils literal notranslate"><span class="pre">values</span></code> is a list of <code class="code docutils literal notranslate"><span class="pre">n</span></code> integers, where <code class="code docutils literal notranslate"><span class="pre">n</span></code>
+is the number of number of rows in the grid.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">gen</span></code> method recursively iterates through every row and tests every
+possible solution. The <code class="code docutils literal notranslate"><span class="pre">rowuses</span></code> generators will only return an integer
+if the queen can be put on the <code class="code docutils literal notranslate"><span class="pre">i</span></code>-th square without affecting the other
+solutions.</p>
+<p>Since <code class="code docutils literal notranslate"><span class="pre">values</span></code> stores, the current solution let’s add a couple of print
+statements, and track the solutions.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">simple_conjoin</span><span class="p">(</span><span class="n">gs</span><span class="p">):</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gs</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;values&#39; when &#39;values&#39; is yielded: &quot;</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">[</span><span class="n">i</span><span class="p">]():</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;values&#39; when &#39;x&#39; is yielded: &quot;</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">x</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>And we replace <code class="code docutils literal notranslate"><span class="pre">conjoin</span></code> with <code class="code docutils literal notranslate"><span class="pre">simple_conjoin</span></code> in the <code class="code docutils literal notranslate"><span class="pre">solve</span></code>
+method. Let us calculate the case for <code class="code docutils literal notranslate"><span class="pre">n</span></code> is 4.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">sol</span> <span class="k">for</span> <span class="n">sol</span> <span class="ow">in</span> <span class="n">Queens</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">solve</span><span class="p">()]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [0, None, None, None]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [0, 2, None, None]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [0, 3, None, None]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [0, 3, 1, None]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [1, 3, 1, None]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [1, 3, 1, None]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [1, 3, 0, None]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [1, 3, 0, 2]</span>
+<span class="go">&#39;values&#39; when &#39;values&#39; is yielded:  [1, 3, 0, 2]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [2, 3, 0, 2]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [2, 0, 0, 2]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [2, 0, 3, 2]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [2, 0, 3, 1]</span>
+<span class="go">&#39;values&#39; when &#39;values&#39; is yielded:  [2, 0, 3, 1]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [3, 0, 3, 1]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [3, 0, 3, 1]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [3, 0, 2, 1]</span>
+<span class="go">&#39;values&#39; before &#39;x&#39; is yielded:  [3, 1, 2, 1]</span>
+<span class="go">[[3, 1, 2, 1], [3, 1, 2, 1]]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Let us walk through a few of these steps.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># Queen in top left corner</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>     <span class="c1"># 1-st row queen in 2-nd column not 1-st due to diagonal</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>     <span class="c1"># With [0, 2, None, None] cannot put queen on second row</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>        <span class="c1"># No solution so move queen in 0-th column</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>        <span class="c1"># Conflict in 2-nd col so move it</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>           <span class="c1"># Solution!</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>           <span class="c1"># Incremenet the first column so start next solution ...</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="monads.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">10. </span>Monads</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="numpy_broadcasting.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">12. </span>Broadcasting in Numpy</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bitwise-operators-in-python">11.1. Bitwise Operators in Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-n-queens-in-a-functional-way">11.2. Solving N-Queens in a Functional Way</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#representing-the-board-in-rowuses">11.3. Representing the board in <code class="code docutils literal notranslate"><span class="pre">rowuses</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#term-1-1-j">11.4. Term 1 <code class="code docutils literal notranslate"><span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">j)</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#term-2-1-n-i-j-n-1">11.5. Term 2 <code class="code docutils literal notranslate"><span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">n</span> <span class="pre">+</span> <span class="pre">i-j</span> <span class="pre">+</span> <span class="pre">n-1)</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#term-3-1-n-2-n-1-i-j">11.6. Term 3 <code class="code docutils literal notranslate"><span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">(n</span> <span class="pre">+</span> <span class="pre">2*n-1</span> <span class="pre">+</span> <span class="pre">i+j))</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rowgen-method">11.7. The <code class="code docutils literal notranslate"><span class="pre">rowgen</span></code> Method</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-solutions">11.8. Finding the Solutions</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/Programming/nqueens.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Alex Gregory.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

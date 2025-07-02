@@ -1,0 +1,907 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>3. Causality vs Correlation &#8212; Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/notebookstyle.css?v=3b045b9e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Maths/causal_inference';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4. Eigenvalues and Eigenvectors" href="eigenvalues_and_eigenvectors.html" />
+    <link rel="prev" title="2. Bibliography" href="bibliography.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Notes</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Programming/index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Programming/index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="arithmetic_series.html">1. Arithmetic Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">2. Bibliography</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Causality vs Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eigenvalues_and_eigenvectors.html">4. Eigenvalues and Eigenvectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix_operations.html">5. Matrix Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pythagorean_means.html">6. Pythagorean Means</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="shannon_entropy.html">8. Shannon Entropy</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Maths</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><span class="section-number">3. </span>Causality vs Correlation</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="causality-vs-correlation">
+<h1><span class="section-number">3. </span>Causality vs Correlation<a class="headerlink" href="#causality-vs-correlation" title="Link to this heading">#</a></h1>
+<p>Intuitively, we all understand cause and effect relationships; rain causes a
+wet pavement but a wet pavement does not cause rain. Getting a computer to
+understand these relationships is tricky. Current state of the art machine
+learning algorithms are very good at exploiting data correlations and applied
+to lots of problems very successfully however it does have limitations which we
+will introduce in this section.</p>
+<p>This article is an introduction to causal inference. I am not an expert in this
+topic so this contains some of my own thoughts and questions.</p>
+<section id="spurious-correlations">
+<h2><span class="section-number">3.1. </span>Spurious correlations<a class="headerlink" href="#spurious-correlations" title="Link to this heading">#</a></h2>
+<p>There is a wealth of humorous correlation examples out in the literature. Tyler
+Vigen hosts a website (<a class="reference external" href="https://www.tylervigen.com/spurious-correlations">https://www.tylervigen.com/spurious-correlations</a>)
+dedicated to finding highly correlated, completely unrelated data. One such
+dataset is shown below. Unless people named Alix are much more likely steal
+cars, there is no relation between that and carjackings. Machine learning
+algorithms that are trained to exploit spurious correlations have real world
+consequences.</p>
+<svg width="600" height="392" xmlns="http://www.w3.org/2000/svg"> <rect width="100%" height="100%" fill="#FEFEFE" />
+<line x1="70" y1="252" x2="530" y2="252" stroke="#9f9f9f" stroke-width="1" />
+<rect x="70" y="87" width="460" height="165" fill="#FEFEFE" />
+<text text-anchor="middle" x="300.0" y="20" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="bold" font-size="22" fill="#000000">Popularity of the first name Alix</text>
+<text text-anchor="middle" x="300.0" y="42" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" fill="#000000">correlates with</text>
+<text text-anchor="middle" x="300.0" y="68" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="bold" font-size="22" fill="#ba0f27">Carjackings in the US</text>
+<text text-anchor="start" x="23" y="297.3333333333333" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" fill="#9f9f9f">Babies of all sexes born in the US named Alix &#183; Source: US Social Security</text>
+<text text-anchor="start" x="23" y="313.3333333333333" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" fill="#9f9f9f">Administration</text>
+<text text-anchor="start" x="23" y="336.66666666666663" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" fill="#9f9f9f">Rate of nonfatal carjacking victimization per 1,000 persons age 16 or older</text>
+<text text-anchor="start" x="23" y="352.66666666666663" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" fill="#9f9f9f">(3-year moving averages) &#183; Source: Bureau of Justice Statistics</text>
+<text text-anchor="start" x="23" y="375.99999999999994" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" fill="#9f9f9f">1995-2021, r=0.968, r&#178;=0.937, p&lt;0.01  &#183;  tylervigen.com/spurious/correlation/5912</text>
+<polyline points="5,292.66666666666663 20,292.66666666666663" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1" />
+<polygon points="3.0200000000000005,292.66666666666663 5,290.6866666666666 6.9799999999999995,292.66666666666663 5,294.64666666666665" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="3.0200000000000005,292.66666666666663 5,290.6866666666666 6.9799999999999995,292.66666666666663 5,294.64666666666665" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polyline points="5,331.99999999999994 20,331.99999999999994" style="fill:none;stroke:#ba0f27;stroke-width:2" />
+<circle cx="5" cy="331.99999999999994" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="5" cy="331.99999999999994" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<text x="5" y="174.5" transform="rotate(270 5 169.5)" text-anchor="middle" fill="#000000" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" dominant-baseline="central">Babies born</text>
+<text x="169.5" y="-389" transform="rotate(90 100 100)" text-anchor="middle" fill="#ba0f27" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" dominant-baseline="central">Carjackings</text>
+<line x1="71" y1="93.65" x2="528" y2="93.65" stroke="#F3F3F3" stroke-width="1" fill="#FEFEFE" />
+<text text-anchor="end" x="62" y="98.31666666666668" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#000000">171</text>
+<text text-anchor="start" x="538" y="98.31666666666668" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#ba0f27">0.53</text>
+<line x1="71" y1="131.575" x2="528" y2="131.575" stroke="#F3F3F3" stroke-width="1" fill="#FEFEFE" />
+<text text-anchor="end" x="62" y="136.24166666666665" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12">136</text>
+<text text-anchor="start" x="538" y="136.24166666666665" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#ba0f27">0.42</text>
+<line x1="71" y1="169.5" x2="528" y2="169.5" stroke="#F3F3F3" stroke-width="1" fill="#FEFEFE" />
+<text text-anchor="end" x="62" y="174.16666666666666" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12">102</text>
+<text text-anchor="start" x="538" y="174.16666666666666" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#ba0f27">0.31</text>
+<line x1="71" y1="207.425" x2="528" y2="207.425" stroke="#F3F3F3" stroke-width="1" fill="#FEFEFE" />
+<text text-anchor="end" x="62" y="212.09166666666667" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12">67</text>
+<text text-anchor="start" x="538" y="212.09166666666667" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#ba0f27">0.2</text>
+<line x1="71" y1="245.35" x2="528" y2="245.35" stroke="#F3F3F3" stroke-width="1" fill="#FEFEFE" />
+<text text-anchor="end" x="62" y="250.01666666666665" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12">32</text>
+<text text-anchor="start" x="538" y="250.01666666666665" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#ba0f27">0.09</text>
+<polyline points="76.65,252 76.65,258" style="fill:none;stroke:#000000;stroke-width:1" />
+<polyline points="162.55384615384617,252 162.55384615384617,258" style="fill:none;stroke:#000000;stroke-width:1" />
+<polyline points="248.4576923076923,252 248.4576923076923,258" style="fill:none;stroke:#000000;stroke-width:1" />
+<polyline points="334.36153846153843,252 334.36153846153843,258" style="fill:none;stroke:#000000;stroke-width:1" />
+<polyline points="420.2653846153846,252 420.2653846153846,258" style="fill:none;stroke:#000000;stroke-width:1" />
+<polyline points="506.1692307692307,252 506.1692307692307,258" style="fill:none;stroke:#000000;stroke-width:1" />
+<text text-anchor="middle" x="76.65" y="273" font-weight="bold" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14">1995</text>
+<text text-anchor="middle" x="162.55384615384617" y="273" font-weight="bold" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14">2000</text>
+<text text-anchor="middle" x="248.4576923076923" y="273" font-weight="bold" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14">2005</text>
+<text text-anchor="middle" x="334.36153846153843" y="273" font-weight="bold" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14">2010</text>
+<text text-anchor="middle" x="420.2653846153846" y="273" font-weight="bold" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14">2015</text>
+<text text-anchor="middle" x="506.1692307692307" y="273" font-weight="bold" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14">2020</text>
+<polyline points="76.65,93.65 93.83076923076923,110.88863636363638" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="93.83076923076923,110.88863636363638 111.01153846153846,138.47045454545454" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="111.01153846153846,138.47045454545454 128.19230769230768,172.94772727272726" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="128.19230769230768,172.94772727272726 145.37307692307692,155.70909090909092" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="145.37307692307692,155.70909090909092 162.55384615384617,169.5" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="162.55384615384617,169.5 179.73461538461538,169.5" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="179.73461538461538,169.5 196.9153846153846,210.87272727272727" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="196.9153846153846,210.87272727272727 214.09615384615384,197.08181818181816" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="214.09615384615384,197.08181818181816 231.27692307692305,210.87272727272727" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="231.27692307692305,210.87272727272727 248.4576923076923,200.52954545454546" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="248.4576923076923,200.52954545454546 265.63846153846157,212.59659090909088" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="265.63846153846157,212.59659090909088 282.8192307692308,212.59659090909088" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="282.8192307692308,212.59659090909088 300.0,212.59659090909088" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="300.0,212.59659090909088 317.1807692307692,224.66363636363633" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="317.1807692307692,224.66363636363633 334.36153846153843,231.55909090909088" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="334.36153846153843,231.55909090909088 351.54230769230765,245.35" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="351.54230769230765,245.35 368.72307692307686,245.35" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="368.72307692307686,245.35 385.9038461538461,235.00681818181818" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="385.9038461538461,235.00681818181818 403.0846153846154,224.66363636363633" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="403.0846153846154,224.66363636363633 420.2653846153846,228.11136363636362" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="420.2653846153846,228.11136363636362 437.44615384615383,238.45454545454544" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="437.44615384615383,238.45454545454544 454.62692307692305,245.35" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="454.62692307692305,245.35 471.80769230769226,241.9022727272727" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="471.80769230769226,241.9022727272727 488.9884615384615,241.9022727272727" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="488.9884615384615,241.9022727272727 506.1692307692307,241.9022727272727" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<polyline points="506.1692307692307,241.9022727272727 523.3499999999999,235.00681818181818" style="fill:none;stroke:#ba0f27;stroke-width:2"  />
+<circle cx="76.65" cy="93.65" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="76.65" cy="93.65" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="93.83076923076923" cy="110.88863636363638" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="93.83076923076923" cy="110.88863636363638" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="111.01153846153846" cy="138.47045454545454" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="111.01153846153846" cy="138.47045454545454" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="128.19230769230768" cy="172.94772727272726" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="128.19230769230768" cy="172.94772727272726" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="145.37307692307692" cy="155.70909090909092" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="145.37307692307692" cy="155.70909090909092" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="162.55384615384617" cy="169.5" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="162.55384615384617" cy="169.5" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="179.73461538461538" cy="169.5" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="179.73461538461538" cy="169.5" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="196.9153846153846" cy="210.87272727272727" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="196.9153846153846" cy="210.87272727272727" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="214.09615384615384" cy="197.08181818181816" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="214.09615384615384" cy="197.08181818181816" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="231.27692307692305" cy="210.87272727272727" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="231.27692307692305" cy="210.87272727272727" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="248.4576923076923" cy="200.52954545454546" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="248.4576923076923" cy="200.52954545454546" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="265.63846153846157" cy="212.59659090909088" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="265.63846153846157" cy="212.59659090909088" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="282.8192307692308" cy="212.59659090909088" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="282.8192307692308" cy="212.59659090909088" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="300.0" cy="212.59659090909088" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="300.0" cy="212.59659090909088" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="317.1807692307692" cy="224.66363636363633" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="317.1807692307692" cy="224.66363636363633" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="334.36153846153843" cy="231.55909090909088" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="334.36153846153843" cy="231.55909090909088" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="351.54230769230765" cy="245.35" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="351.54230769230765" cy="245.35" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="368.72307692307686" cy="245.35" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="368.72307692307686" cy="245.35" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="385.9038461538461" cy="235.00681818181818" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="385.9038461538461" cy="235.00681818181818" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="403.0846153846154" cy="224.66363636363633" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="403.0846153846154" cy="224.66363636363633" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="420.2653846153846" cy="228.11136363636362" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="420.2653846153846" cy="228.11136363636362" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="437.44615384615383" cy="238.45454545454544" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="437.44615384615383" cy="238.45454545454544" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="454.62692307692305" cy="245.35" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="454.62692307692305" cy="245.35" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="471.80769230769226" cy="241.9022727272727" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="471.80769230769226" cy="241.9022727272727" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="488.9884615384615" cy="241.9022727272727" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="488.9884615384615" cy="241.9022727272727" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="506.1692307692307" cy="241.9022727272727" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="506.1692307692307" cy="241.9022727272727" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<circle cx="523.3499999999999" cy="235.00681818181818" r="1.65" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7" />
+<circle cx="523.3499999999999" cy="235.00681818181818" r="1.65" stroke="#ba0f27" stroke-width="1.65" fill="#ba0f27"  />
+<polyline points="76.65,93.65 93.83076923076923,137.3046762589928" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="93.83076923076923,137.3046762589928 111.01153846153846,132.93920863309353" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="111.01153846153846,132.93920863309353 128.19230769230768,162.40611510791368" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="128.19230769230768,162.40611510791368 145.37307692307692,158.04064748201438" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="145.37307692307692,158.04064748201438 162.55384615384617,156.94928057553958" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="162.55384615384617,156.94928057553958 179.73461538461538,185.3248201438849" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="179.73461538461538,185.3248201438849 196.9153846153846,200.60395683453237" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="196.9153846153846,200.60395683453237 214.09615384615384,175.50251798561152" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="214.09615384615384,175.50251798561152 231.27692307692305,185.3248201438849" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="231.27692307692305,185.3248201438849 248.4576923076923,198.42122302158273" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="248.4576923076923,198.42122302158273 265.63846153846157,204.96942446043167" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="265.63846153846157,204.96942446043167 282.8192307692308,202.78669064748203" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="282.8192307692308,202.78669064748203 300.0,207.1521582733813" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="300.0,207.1521582733813 317.1807692307692,222.43129496402878" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="317.1807692307692,222.43129496402878 334.36153846153843,224.61402877697842" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="334.36153846153843,224.61402877697842 351.54230769230765,220.24856115107914" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="351.54230769230765,220.24856115107914 368.72307692307686,235.52769784172662" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="368.72307692307686,235.52769784172662 385.9038461538461,227.88812949640288" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="385.9038461538461,227.88812949640288 403.0846153846154,225.70539568345325" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="403.0846153846154,225.70539568345325 420.2653846153846,228.97949640287771" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="420.2653846153846,228.97949640287771 437.44615384615383,232.25359712230215" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="437.44615384615383,232.25359712230215 454.62692307692305,236.61906474820145" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="454.62692307692305,236.61906474820145 471.80769230769226,238.8017985611511" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="471.80769230769226,238.8017985611511 488.9884615384615,234.43633093525182" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="488.9884615384615,234.43633093525182 506.1692307692307,245.35" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polyline points="506.1692307692307,245.35 523.3499999999999,235.52769784172662" style="fill:none;stroke:#000000;stroke-width:2" stroke-dasharray="3,1"  />
+<polygon points="74.67,93.65 76.65,91.67 78.63000000000001,93.65 76.65,95.63000000000001" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="74.67,93.65 76.65,91.67 78.63000000000001,93.65 76.65,95.63000000000001" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="91.85076923076923,137.3046762589928 93.83076923076923,135.3246762589928 95.81076923076924,137.3046762589928 93.83076923076923,139.2846762589928" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="91.85076923076923,137.3046762589928 93.83076923076923,135.3246762589928 95.81076923076924,137.3046762589928 93.83076923076923,139.2846762589928" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="109.03153846153846,132.93920863309353 111.01153846153846,130.95920863309354 112.99153846153847,132.93920863309353 111.01153846153846,134.91920863309352" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="109.03153846153846,132.93920863309353 111.01153846153846,130.95920863309354 112.99153846153847,132.93920863309353 111.01153846153846,134.91920863309352" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="126.21230769230768,162.40611510791368 128.19230769230768,160.4261151079137 130.17230769230767,162.40611510791368 128.19230769230768,164.38611510791367" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="126.21230769230768,162.40611510791368 128.19230769230768,160.4261151079137 130.17230769230767,162.40611510791368 128.19230769230768,164.38611510791367" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="143.39307692307693,158.04064748201438 145.37307692307692,156.0606474820144 147.3530769230769,158.04064748201438 145.37307692307692,160.02064748201437" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="143.39307692307693,158.04064748201438 145.37307692307692,156.0606474820144 147.3530769230769,158.04064748201438 145.37307692307692,160.02064748201437" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="160.57384615384618,156.94928057553958 162.55384615384617,154.96928057553959 164.53384615384616,156.94928057553958 162.55384615384617,158.92928057553956" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="160.57384615384618,156.94928057553958 162.55384615384617,154.96928057553959 164.53384615384616,156.94928057553958 162.55384615384617,158.92928057553956" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="177.7546153846154,185.3248201438849 179.73461538461538,183.3448201438849 181.71461538461537,185.3248201438849 179.73461538461538,187.30482014388488" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="177.7546153846154,185.3248201438849 179.73461538461538,183.3448201438849 181.71461538461537,185.3248201438849 179.73461538461538,187.30482014388488" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="194.9353846153846,200.60395683453237 196.9153846153846,198.62395683453238 198.8953846153846,200.60395683453237 196.9153846153846,202.58395683453236" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="194.9353846153846,200.60395683453237 196.9153846153846,198.62395683453238 198.8953846153846,200.60395683453237 196.9153846153846,202.58395683453236" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="212.11615384615385,175.50251798561152 214.09615384615384,173.52251798561153 216.07615384615383,175.50251798561152 214.09615384615384,177.4825179856115" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="212.11615384615385,175.50251798561152 214.09615384615384,173.52251798561153 216.07615384615383,175.50251798561152 214.09615384615384,177.4825179856115" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="229.29692307692306,185.3248201438849 231.27692307692305,183.3448201438849 233.25692307692304,185.3248201438849 231.27692307692305,187.30482014388488" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="229.29692307692306,185.3248201438849 231.27692307692305,183.3448201438849 233.25692307692304,185.3248201438849 231.27692307692305,187.30482014388488" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="246.4776923076923,198.42122302158273 248.4576923076923,196.44122302158274 250.4376923076923,198.42122302158273 248.4576923076923,200.40122302158272" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="246.4776923076923,198.42122302158273 248.4576923076923,196.44122302158274 250.4376923076923,198.42122302158273 248.4576923076923,200.40122302158272" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="263.65846153846155,204.96942446043167 265.63846153846157,202.98942446043168 267.6184615384616,204.96942446043167 265.63846153846157,206.94942446043166" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="263.65846153846155,204.96942446043167 265.63846153846157,202.98942446043168 267.6184615384616,204.96942446043167 265.63846153846157,206.94942446043166" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="280.83923076923077,202.78669064748203 282.8192307692308,200.80669064748204 284.7992307692308,202.78669064748203 282.8192307692308,204.76669064748202" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="280.83923076923077,202.78669064748203 282.8192307692308,200.80669064748204 284.7992307692308,202.78669064748203 282.8192307692308,204.76669064748202" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="298.02,207.1521582733813 300.0,205.1721582733813 301.98,207.1521582733813 300.0,209.1321582733813" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="298.02,207.1521582733813 300.0,205.1721582733813 301.98,207.1521582733813 300.0,209.1321582733813" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="315.2007692307692,222.43129496402878 317.1807692307692,220.4512949640288 319.16076923076923,222.43129496402878 317.1807692307692,224.41129496402877" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="315.2007692307692,222.43129496402878 317.1807692307692,220.4512949640288 319.16076923076923,222.43129496402878 317.1807692307692,224.41129496402877" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="332.3815384615384,224.61402877697842 334.36153846153843,222.63402877697843 336.34153846153845,224.61402877697842 334.36153846153843,226.5940287769784" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="332.3815384615384,224.61402877697842 334.36153846153843,222.63402877697843 336.34153846153845,224.61402877697842 334.36153846153843,226.5940287769784" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="349.5623076923076,220.24856115107914 351.54230769230765,218.26856115107915 353.52230769230766,220.24856115107914 351.54230769230765,222.22856115107913" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="349.5623076923076,220.24856115107914 351.54230769230765,218.26856115107915 353.52230769230766,220.24856115107914 351.54230769230765,222.22856115107913" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="366.74307692307684,235.52769784172662 368.72307692307686,233.54769784172663 370.7030769230769,235.52769784172662 368.72307692307686,237.5076978417266" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="366.74307692307684,235.52769784172662 368.72307692307686,233.54769784172663 370.7030769230769,235.52769784172662 368.72307692307686,237.5076978417266" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="383.92384615384606,227.88812949640288 385.9038461538461,225.9081294964029 387.8838461538461,227.88812949640288 385.9038461538461,229.86812949640287" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="383.92384615384606,227.88812949640288 385.9038461538461,225.9081294964029 387.8838461538461,227.88812949640288 385.9038461538461,229.86812949640287" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="401.1046153846154,225.70539568345325 403.0846153846154,223.72539568345326 405.0646153846154,225.70539568345325 403.0846153846154,227.68539568345324" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="401.1046153846154,225.70539568345325 403.0846153846154,223.72539568345326 405.0646153846154,225.70539568345325 403.0846153846154,227.68539568345324" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="418.2853846153846,228.97949640287771 420.2653846153846,226.99949640287772 422.24538461538464,228.97949640287771 420.2653846153846,230.9594964028777" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="418.2853846153846,228.97949640287771 420.2653846153846,226.99949640287772 422.24538461538464,228.97949640287771 420.2653846153846,230.9594964028777" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="435.4661538461538,232.25359712230215 437.44615384615383,230.27359712230216 439.42615384615385,232.25359712230215 437.44615384615383,234.23359712230214" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="435.4661538461538,232.25359712230215 437.44615384615383,230.27359712230216 439.42615384615385,232.25359712230215 437.44615384615383,234.23359712230214" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="452.64692307692303,236.61906474820145 454.62692307692305,234.63906474820146 456.60692307692307,236.61906474820145 454.62692307692305,238.59906474820144" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="452.64692307692303,236.61906474820145 454.62692307692305,234.63906474820146 456.60692307692307,236.61906474820145 454.62692307692305,238.59906474820144" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="469.82769230769225,238.8017985611511 471.80769230769226,236.8217985611511 473.7876923076923,238.8017985611511 471.80769230769226,240.78179856115108" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="469.82769230769225,238.8017985611511 471.80769230769226,236.8217985611511 473.7876923076923,238.8017985611511 471.80769230769226,240.78179856115108" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="487.00846153846146,234.43633093525182 488.9884615384615,232.45633093525183 490.9684615384615,234.43633093525182 488.9884615384615,236.4163309352518" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="487.00846153846146,234.43633093525182 488.9884615384615,232.45633093525183 490.9684615384615,234.43633093525182 488.9884615384615,236.4163309352518" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="504.1892307692307,245.35 506.1692307692307,243.37 508.1492307692307,245.35 506.1692307692307,247.32999999999998" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="504.1892307692307,245.35 506.1692307692307,243.37 508.1492307692307,245.35 506.1692307692307,247.32999999999998" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+<polygon points="521.3699999999999,235.52769784172662 523.3499999999999,233.54769784172663 525.3299999999999,235.52769784172662 523.3499999999999,237.5076978417266" stroke="#F7F7F7" stroke-width="1.65" fill="#F7F7F7"  />
+<polygon points="521.3699999999999,235.52769784172662 523.3499999999999,233.54769784172663 525.3299999999999,235.52769784172662 523.3499999999999,237.5076978417266" stroke="#000000" stroke-width="1.65" fill="#000000"  />
+</svg></section>
+<section id="the-iid-assumption">
+<h2><span class="section-number">3.2. </span>The IID Assumption<a class="headerlink" href="#the-iid-assumption" title="Link to this heading">#</a></h2>
+<p>Modern machine learning relies heavily on the assumption that the training and
+test data is independently and identically distributed. The assumption has two
+parts:</p>
+<dl class="simple">
+<dt><strong>Independently Distributed</strong></dt><dd><p>Each data point does not influence the other data points. For example, the
+result of one coin flip does not affect the next.</p>
+</dd>
+<dt><strong>Identically Distributed</strong></dt><dd><p>Every data point comes from the same probability distribution.</p>
+</dd>
+</dl>
+<p>These assumptions are why we split our datasets into a training and test
+dataset. We assume the test data is sampled from the same distribution as the
+training data so if a model performs well on the training data, it should also
+perform well on the test data. We may in-fact train a good model that performs
+well on the unseen test data but when the model is put into production we find
+that new data coming does not look like the train/test data, and model
+performance degrades.</p>
+<p>In the Imagenet challenge, huskies tend to be in snowy backgrounds. Some of the
+best performing models seem to base their dog breed predictions at least in
+part of the background meaning if the models are presented with a husky in a
+desert, there is a good chance it will be misclassified.</p>
+</section>
+<section id="how-can-causal-inference-help">
+<h2><span class="section-number">3.3. </span>How can Causal Inference Help?<a class="headerlink" href="#how-can-causal-inference-help" title="Link to this heading">#</a></h2>
+</section>
+<section id="randomized-controlled-trials">
+<h2><span class="section-number">3.4. </span>Randomized Controlled Trials<a class="headerlink" href="#randomized-controlled-trials" title="Link to this heading">#</a></h2>
+<p>Randomized control trials are the gold standard for causal inference. A well
+designed study lets causal conclusions be drawn from association by
+<span id="id1">[<a class="reference internal" href="#id7" title="David Rawlinson. An introduction to causal inference with python – making accurate estimates of cause and effect from. https://www.youtube.com/watch?v=ilpSZiDjdv0, May 2023.">Raw23</a>]</span>:</p>
+<ol class="arabic simple">
+<li><p>Making a change to one group but not the other.</p></li>
+<li><p>Making the treated and control groups comparable by eliminating all sources
+of bias through randomisation.</p></li>
+</ol>
+<p>Eliminating all sources of cofounders from the treated and controls means that
+any differences observed between the groups must be due the intervention.</p>
+<figure class="align-default" id="id10">
+<a class="reference internal image-reference" href="../_images/randomised_controlled_trial.png"><img alt="An image showing a control and treated where the confounders are the same." src="../_images/randomised_controlled_trial.png" style="width: 500px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">This figures shows the treated and control group in a randomised control. The
+same number of blue, orange, and green stick figures are in each group so the
+same cofounders are in both groups.</span><a class="headerlink" href="#id10" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Randomised controlled trials can be very expensive and sometimes unethical. For
+example, suppose we wanted to measure the causal impact of smoking on cancer.
+Obviously, it would be immoral to ask a group of random participants to smoke
+for the next 25 years to measure the effect on their health. These kinds of
+economic and ethical concerns are common, so there is a lot of interest in how
+we can measure causal effects from purely observational data.</p>
+</section>
+<section id="what-are-the-problems-where-you-should-consider-using-causal-inference">
+<h2><span class="section-number">3.5. </span>What are the Problems where you Should Consider Using Causal Inference?<a class="headerlink" href="#what-are-the-problems-where-you-should-consider-using-causal-inference" title="Link to this heading">#</a></h2>
+<p>You should consider using causal inference if you are trying to answer what-if
+questions.</p>
+<ul class="simple">
+<li><p>If I decrease the price of my product, what will be the effect on sales.</p></li>
+</ul>
+<p>There efforts to broaden the scope of causal inference and apply it to more
+general prediction problems. One are where causal inference is being used is
+for out of distribution prediction.</p>
+</section>
+<section id="causal-graphs">
+<h2><span class="section-number">3.6. </span>Causal Graphs<a class="headerlink" href="#causal-graphs" title="Link to this heading">#</a></h2>
+<p>Causal graphs are a compact way to represent the assumptions we make about our
+data. A causal graph must be directed and acyclic.</p>
+<p>Nodes are made up of nodes and edges:</p>
+<ul class="simple">
+<li><p><strong>Nodes</strong> represent variables or features in the world.</p></li>
+<li><p><strong>Edges</strong> represent a causal relationships that connects two nodes no matter
+how strong the connection.</p></li>
+</ul>
+<p>Saying two nodes have no edge connecting is a stronger assumption than saying
+they are connected but their connection is very weak <span id="id2">[<a class="reference internal" href="#id6" title="Amit Sharm Emre Kiciman. Causal Reasoning: Fundamentals and Machine Learning Applications. 2019.">EK19</a>]</span>. Below
+is a graph for rain and wet ground, the rain causes the ground to become wet
+which causes people to slip.</p>
+<a class="reference internal image-reference" href="../_images/rain_to_wet_ground_to_slip.png"><img alt="Image showing rain causes wet ground which causes slips" src="../_images/rain_to_wet_ground_to_slip.png" style="width: 500px;" />
+</a>
+<p>Causal Graphs help us reason about our system to ask questions like: if we
+intervene to make the ground drier, what is the impact on slips?</p>
+</section>
+<section id="assumptions">
+<h2><span class="section-number">3.7. </span>Assumptions<a class="headerlink" href="#assumptions" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Suppose we have the graph A -&gt; B -&gt; C. If we change A, that will affect the
+relationship between A and B but not C <span id="id3">[<a class="reference internal" href="#id6" title="Amit Sharm Emre Kiciman. Causal Reasoning: Fundamentals and Machine Learning Applications. 2019.">EK19</a>]</span>.</p></li>
+</ul>
+</section>
+<section id="structural-equations">
+<h2><span class="section-number">3.8. </span>Structural Equations<a class="headerlink" href="#structural-equations" title="Link to this heading">#</a></h2>
+<p>A causal graph does not say anything about the relationship between nodes, only
+that the relationship exists or does not exist. One way to measure the
+relationship between nodes is with structural equation models. Consider the
+following DAG:</p>
+<a class="reference internal image-reference" href="../_images/toy_graph.png"><img alt="An example toy graph." src="../_images/toy_graph.png" style="width: 500px;" />
+</a>
+<p>The structural equations for this DAG look like this:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}B &amp; \leftarrow f_1(A) \\
+C &amp; \leftarrow f_2(A) \\
+D &amp; \leftarrow f_3(B, C) \\
+E &amp; \leftarrow f_4(D) \\\end{split}\]</div>
+<p>The functions <span class="math notranslate nohighlight">\(f_i\)</span> can take on any form but we can limit things further
+by enforcing a linear relationships on the functions.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}B &amp; \leftarrow \alpha_1 \cdot A \\
+C &amp; \leftarrow \alpha_2 \cdot A \\
+D &amp; \leftarrow \alpha_3 \cdot B + \alpha_4 \cdot C \\
+E &amp; \leftarrow \alpha_5 \cdot D \\\end{split}\]</div>
+</section>
+<section id="structural-equations-and-linear-regression">
+<h2><span class="section-number">3.9. </span>Structural Equations and Linear Regression<a class="headerlink" href="#structural-equations-and-linear-regression" title="Link to this heading">#</a></h2>
+<p>The equations presented in the previous look very similar to linear regression.
+So what is the advantage to creating a graphical causal model? We will
+demonstrate the utility through an example.</p>
+<p>Suppose we want to measure the effectiveness of a drug from the following DAG
+where <code class="code docutils literal notranslate"><span class="pre">T</span></code> is the quantity of the drug that is administered, <code class="code docutils literal notranslate"><span class="pre">O</span></code> is
+the outcome of some biomarker that we want to improve like blood pressure.</p>
+<a class="reference internal image-reference" href="../_images/treatment_cofounder.png"><img alt="An example toy graph." src="../_images/treatment_cofounder.png" style="width: 400px;" />
+</a>
+<p>Do a Simpson’s paradox example.</p>
+</section>
+<section id="pearl-s-ladder-of-causation">
+<h2><span class="section-number">3.10. </span>Pearl’s Ladder of Causation<a class="headerlink" href="#pearl-s-ladder-of-causation" title="Link to this heading">#</a></h2>
+<p>Certain types of structural causal models fall on rung three of Pearl’s ladder
+of causation.</p>
+<div class="pst-scrollable-table-container"><table class="table" id="id11">
+<caption><span class="caption-text">Pearl’s ladder of causation <span id="id4">[<a class="reference internal" href="#id8" title="Judea Pearl. Causality: Models, Reasoning and Inference. Cambridge University Press, USA, 2nd edition, 2009. ISBN 052189560X.">Pea09</a>]</span>.</span><a class="headerlink" href="#id11" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Level</p></th>
+<th class="head"><p>Activity</p></th>
+<th class="head"><p>Questions</p></th>
+<th class="head"><p>Examples</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Imagining</p></td>
+<td><p>What if I had done <em>X</em> instead of <em>Y</em>.</p></td>
+<td><p>Would this image still be classified as a zerbra if it had spikes
+instead of spots?</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>Intervening</p></td>
+<td><p>What if I do <em>X</em>?</p></td>
+<td><p>If we ban cigarettes, will smoking reduce?</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>Observing, Association</p></td>
+<td><p>What is important?</p></td>
+<td><p>What is the breed of dog in this image?</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Traditional machine learning like image classification, regression, and
+clustering fall on the first third run of Peal’s causation ladder. Structural
+causal models can be used for intervening and imaging type reasoning.</p>
+</section>
+<section id="level-2-intervention-through-the-outcome-framework">
+<h2><span class="section-number">3.11. </span>Level 2: Intervention through the Outcome Framework<a class="headerlink" href="#level-2-intervention-through-the-outcome-framework" title="Link to this heading">#</a></h2>
+<p>Interventions questions are things like:</p>
+<ul class="simple">
+<li><p>What would the effect be on B if I change the value (intervene) on A.</p></li>
+</ul>
+<p>Consider the following causal graph.</p>
+<a class="reference internal image-reference" href="../_images/age_treatment_outcome.png"><img alt="An example toy graph." src="../_images/age_treatment_outcome.png" style="width: 350px;" />
+</a>
+<p>Age affects the treatment and the outcome. Perhaps the treatment dosage has the
+be reduced depending on age. Suppose that we wanted to give everybody the same
+treatment regardless of age. One might thing our goal is to determine
+<span class="math notranslate nohighlight">\(P(O|T=t,A)\)</span> but that is not quite correct. Our intervention means that
+age no longer causes the treatment so the causal graph becomes:</p>
+<a class="reference internal image-reference" href="../_images/age_treatment_outcome_no_cofound.png"><img alt="An example toy graph." src="../_images/age_treatment_outcome_no_cofound.png" style="width: 350px;" />
+</a>
+<p>Mathematically, this is written as <span class="math notranslate nohighlight">\(P(O|\text{do}(T))\)</span> where the operator
+<span class="math notranslate nohighlight">\(\text{do}(T)\)</span> represents the intervention. From this leads nicely onto
+the idea of an average treatment effect which is the average effect on the
+population from making an intervention.</p>
+<p>Suppose the treatment <span class="math notranslate nohighlight">\(T\)</span> is binary meaning we either apply it
+(<span class="math notranslate nohighlight">\(1\)</span>), or we do not (<span class="math notranslate nohighlight">\(0\)</span>). In <span class="math notranslate nohighlight">\(\text{do}\)</span> notation, the definition of average an treatment effect is:</p>
+<div class="math notranslate nohighlight">
+\[\text{ATE} = \mathbb{E}[Y | \text{do} (T = 1)] - \mathbb{E}[Y | \text{do} (T = 0)]\]</div>
+<div class="docutils container" id="id5">
+<div role="list" class="citation-list">
+<div class="citation" id="id9" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>ERS+22<span class="fn-bracket">]</span></span>
+<p>Cian Eastwood, Alexander Robey, Shashank Singh, Julius Von Kügelgen, Hamed Hassani, George J Pappas, and Bernhard Schölkopf. Probable domain generalization via quantile risk minimization. <em>Advances in Neural Information Processing Systems</em>, 35:17340–17358, 2022.</p>
+</div>
+<div class="citation" id="id6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>EK19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id3">2</a>)</span>
+<p>Amit Sharm Emre Kiciman. <em>Causal Reasoning: Fundamentals and Machine Learning Applications</em>. 2019.</p>
+</div>
+<div class="citation" id="id8" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">Pea09</a><span class="fn-bracket">]</span></span>
+<p>Judea Pearl. <em>Causality: Models, Reasoning and Inference</em>. Cambridge University Press, USA, 2nd edition, 2009. ISBN 052189560X.</p>
+</div>
+<div class="citation" id="id7" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">Raw23</a><span class="fn-bracket">]</span></span>
+<p>David Rawlinson. An introduction to causal inference with python – making accurate estimates of cause and effect from. https://www.youtube.com/watch?v=ilpSZiDjdv0, May 2023.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="bibliography.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Bibliography</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="eigenvalues_and_eigenvectors.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Eigenvalues and Eigenvectors</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spurious-correlations">3.1. Spurious correlations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-iid-assumption">3.2. The IID Assumption</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-can-causal-inference-help">3.3. How can Causal Inference Help?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#randomized-controlled-trials">3.4. Randomized Controlled Trials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-the-problems-where-you-should-consider-using-causal-inference">3.5. What are the Problems where you Should Consider Using Causal Inference?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#causal-graphs">3.6. Causal Graphs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions">3.7. Assumptions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-equations">3.8. Structural Equations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structural-equations-and-linear-regression">3.9. Structural Equations and Linear Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pearl-s-ladder-of-causation">3.10. Pearl’s Ladder of Causation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#level-2-intervention-through-the-outcome-framework">3.11. Level 2: Intervention through the Outcome Framework</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/Maths/causal_inference.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Alex Gregory.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

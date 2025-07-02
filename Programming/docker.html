@@ -1,0 +1,729 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>3. Docker &#8212; Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/notebookstyle.css?v=3b045b9e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Programming/docker';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4. Dockerfile" href="dockerfile.html" />
+    <link rel="prev" title="2. Decorators" href="decorators.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Notes</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Maths/index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Maths/index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="bash.html">1. Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html">2. Decorators</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dockerfile.html">4. Dockerfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generators.html">5. Binary operators</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="generators_and_recursion.html">7. Generators and Recursion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="import_system.html">8. The Python Import System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux.html">9. Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monads.html">10. Monads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nqueens.html">11. N-Queens</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_broadcasting.html">12. Broadcasting in Numpy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regular_expressions.html">13. Regular Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminal_commands.html">14. Terminal Commands</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Programming</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><span class="section-number">3. </span>Docker</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="docker">
+<h1><span class="section-number">3. </span>Docker<a class="headerlink" href="#docker" title="Link to this heading">#</a></h1>
+<p>Some short notes on using docker to create reproducible dev environments.</p>
+<section id="what-is-a-docker-image">
+<h2><span class="section-number">3.1. </span>What is a Docker Image?<a class="headerlink" href="#what-is-a-docker-image" title="Link to this heading">#</a></h2>
+<p>A docker image can be thought of as a snapshot of a read-only virtual machine
+that contains everything needed to create a runnable virtual machine.</p>
+<p>Docker images come in all shapes and sizes and can be downloaded from Docker
+hub which is a huge online repository for Docker images. For example, the
+Docker image for Ubuntu can be downloaded using
+<code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">pull</span> <span class="pre">&lt;image-name&gt;</span></code>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>pull<span class="w"> </span>ubuntu
+<span class="go">Using default tag: latest</span>
+<span class="go">latest: Pulling from library/ubuntu</span>
+<span class="go">e96e057aae67: Pull complete</span>
+<span class="go">Digest: sha256:4b1d0c4a2d2aaf63b37111f34eb9fa89fa1bf53dd6e4ca954d47caebca4005c2</span>
+<span class="go">Status: Downloaded newer image for ubuntu:latest</span>
+<span class="go">docker.io/library/ubuntu:latest</span>
+</pre></div>
+</div>
+<p>The images you have downloaded can be listed using <code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">images</span></code>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>images
+<span class="go">REPOSITORY   TAG      IMAGE ID       CREATED       SIZE</span>
+<span class="go">ubuntu       latest   a8780b506fa4   8 days ago    77.8MB</span>
+</pre></div>
+</div>
+<p>Again, Docker images are read only. We use <code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> to create a
+Docker container from the images which is essentially a runnable virtual
+machine.</p>
+</section>
+<section id="docker-python-dev-environment">
+<h2><span class="section-number">3.2. </span>Docker Python Dev Environment<a class="headerlink" href="#docker-python-dev-environment" title="Link to this heading">#</a></h2>
+<p>On Docker Hub there are a number of python images on Docker hub. The
+<code class="code docutils literal notranslate"><span class="pre">python:3.10-slim-buster</span></code> includes a minimal linux virtual machine with
+python already installed. In this section, we will discuss how to use this
+image to create a simple development environment.</p>
+<section id="tldr">
+<h3><span class="section-number">3.2.1. </span>TLDR<a class="headerlink" href="#tldr" title="Link to this heading">#</a></h3>
+<p>To create an interactive shell from the <code class="code docutils literal notranslate"><span class="pre">python:3.10-slim-buster</span></code> image,
+use the following command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>run<span class="w"> </span>-itd<span class="w"> </span><span class="m">3</span>.10-slim-buster
+<span class="go">38e12b993c037e2447cd63d4d7e5cb64d9c4c03e0df37041136627daab0db222</span>
+<span class="gp">$ </span>docker<span class="w"> </span>ps
+<span class="go">CONTAINER ID   IMAGE                     COMMAND     CREATED          STATUS          PORTS     NAMES</span>
+<span class="go">38e12b993c03   python:3.10-slim-buster   &quot;python3&quot;   33 seconds ago   Up 31 seconds             condescending_galois</span>
+<span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>38e12<span class="w"> </span>/bin/bash
+<span class="gp">root@38e12b993c03:/# </span>python
+<span class="go">Python 3.10.8 (main, Oct 25 2022, 05:40:26) [GCC 8.3.0] on linux</span>
+<span class="go">Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Above, we created a docker container with ID <code class="code docutils literal notranslate"><span class="pre">38e12</span></code>. We then list the
+running containers. Then we execute bash inside the container which gives us an
+interactive shell from which we can run python.</p>
+<p>This gives us a basic python environment inside a docker container.</p>
+<p>In the next few sections, we explore the run command and its flags more deeply.</p>
+</section>
+<section id="explore-docker-run">
+<h3><span class="section-number">3.2.2. </span>Explore Docker Run<a class="headerlink" href="#explore-docker-run" title="Link to this heading">#</a></h3>
+<p>Docker run lets you run a command in a new container <a class="reference internal" href="#drun" id="id1"><span>[DRUN]</span></a>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>run<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>IMAGE<span class="w"> </span><span class="o">[</span>COMMAND<span class="o">]</span><span class="w"> </span><span class="o">[</span>ARG...<span class="o">]</span>
+</pre></div>
+</div>
+<p>Docker run first buts the container from an image and then executes a command.
+For example, we can write hello world to the console after the container has
+been built.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>run<span class="w"> </span>python:3.10-slim-buster<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>Hello,<span class="w"> </span>World!
+<span class="go">Hello, World!</span>
+</pre></div>
+</div>
+<p>We can use <code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">ps</span></code> to list all the running containers and
+<code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">ps</span> <span class="pre">-a</span></code> to list all containers including those that have been
+stopped.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>ps
+<span class="go">CONTAINER ID   IMAGE   COMMAND   CREATED    STATUS   PORTS   NAMES</span>
+<span class="gp">$ </span>docker<span class="w"> </span>ps<span class="w"> </span>-a
+<span class="go">CONTAINER ID   IMAGE                     COMMAND               CREATED         STATUS                     PORTS     NAMES</span>
+<span class="go">e6289b05d40d   python:3.10-slim-buster   &quot;echo Hello, World!&quot;   4 minutes ago   Exited (0) 4 minutes ago             quirky_varahamihira</span>
+</pre></div>
+</div>
+<p>The container exited as soon as the command <code class="code docutils literal notranslate"><span class="pre">echo</span> <span class="pre">Hello,</span> <span class="pre">World</span></code> was
+executed. We can execute any shell command here, in-fact we can start a bash
+shell.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>run<span class="w"> </span>python:3.10-slim-buster<span class="w"> </span>/bin/bash
+<span class="gp">$ </span>docker<span class="w"> </span>ps<span class="w"> </span>-a
+<span class="go">CONTAINER ID   IMAGE                     COMMAND       CREATED              STATUS                          PORTS     NAMES</span>
+<span class="go">7677b3ae48c8   python:3.10-slim-buster   &quot;/bin/bash&quot;   6 seconds ago   Exited (0) 4 seconds ago             competent_jennings</span>
+</pre></div>
+</div>
+<p>However, we see that the shell exits instantly. We need a way to keep the
+container running such that we can give input to the shell. We can do this
+using interactive mode.</p>
+</section>
+<section id="exlore-interactive-mode">
+<h3><span class="section-number">3.2.3. </span>Exlore Interactive Mode<a class="headerlink" href="#exlore-interactive-mode" title="Link to this heading">#</a></h3>
+<p>Interactive mode keeps the standard input (<code class="code docutils literal notranslate"><span class="pre">STDIN</span></code>) of a container open
+and allows us to execute commands in the container. Containers can be run in
+interactive mode by using the <code class="code docutils literal notranslate"><span class="pre">-i</span></code> or <code class="code docutils literal notranslate"><span class="pre">--interactive</span></code> flags.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </span>python:3.10-slim-buster<span class="w"> </span>/bin/bash
+<span class="go">ls</span>
+<span class="go">bin</span>
+<span class="go">boot</span>
+<span class="go">dev</span>
+<span class="go">etc</span>
+<span class="go">home</span>
+<span class="go">lib</span>
+<span class="go">lib64</span>
+<span class="go">media</span>
+<span class="go">mnt</span>
+<span class="go">opt</span>
+<span class="go">proc</span>
+<span class="go">root</span>
+<span class="go">run</span>
+<span class="go">sbin</span>
+<span class="go">srv</span>
+<span class="go">sys</span>
+<span class="go">tmp</span>
+<span class="go">usr</span>
+<span class="go">var</span>
+</pre></div>
+</div>
+<p>Running the command above puts us in a bash shell withing the container that we
+can interactive with. For example, above we executed the <code class="code docutils literal notranslate"><span class="pre">ls</span></code> command
+which lists the files and directories of the current directory.</p>
+<p>This shell may not look familiar, to get a more familiar shell, we have to
+allocate a TTY to the container using the <code class="code docutils literal notranslate"><span class="pre">-t</span></code> flag.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>python:3.10-slim-buster<span class="w"> </span>/bin/bash
+<span class="go">docker run -it python:3.10-slim-buster /bin/bash</span>
+<span class="gp">root@c6b8389f4237:/# </span>ls
+<span class="go">bin   dev  home  lib64  mnt  proc  run   srv  tmp  var</span>
+<span class="go">boot  etc  lib   media  opt  root  sbin  sys  usr</span>
+<span class="gp">root@c6b8389f4237:/# </span><span class="nb">exit</span>
+<span class="gp">$ </span>docker<span class="w"> </span>ps<span class="w"> </span>-a
+<span class="go">CONTAINER ID   IMAGE                     COMMAND       CREATED              STATUS                      PORTS     NAMES</span>
+<span class="go">c6b8389f4237   python:3.10-slim-buster   &quot;/bin/bash&quot;   About a minute ago   Exited (0) 55 seconds ago             fervent_merkle</span>
+</pre></div>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">-t</span></code> flag gives a more familiar shell. Note however that when we exit
+the container, we see the container also stopped. To prevent this, we run the
+container in detached mode.</p>
+</section>
+<section id="exlore-detached-mode">
+<h3><span class="section-number">3.2.4. </span>Exlore Detached Mode<a class="headerlink" href="#exlore-detached-mode" title="Link to this heading">#</a></h3>
+<p>By default, <code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> runs a container in foreground mode. This means
+that when the containers command has been executed, the container is stopped.
+We can run the container in the background by using the <code class="code docutils literal notranslate"><span class="pre">-d</span></code> flag.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>python:3.10-slim-buster
+<span class="go">85ad08af58b567f35ca367b67f5ab09ba7d454e0506c9952c8cc06902f3ed496</span>
+<span class="gp">$ </span>docker<span class="w"> </span>ps
+<span class="go">CONTAINER ID   IMAGE                     COMMAND     CREATED         STATUS         PORTS     NAMES</span>
+<span class="go">85ad08af58b5   python:3.10-slim-buster   &quot;python3&quot;   2 minutes ago   Up 2 minutes             determined_chatelet</span>
+</pre></div>
+</div>
+<p>Here, the <code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> command returns the ID of the container and from
+<code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">ps</span></code>, we see the container is running. Note, we have not included
+the <code class="code docutils literal notranslate"><span class="pre">/bin/bash</span></code> command here.</p>
+<p>So, we have a container that is running in the background but we have not been
+put into a shell in the container. To create a shell in the container, we use
+the <code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">exec</span></code> command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>85ad<span class="w"> </span>/bin/bash
+<span class="gp">root@85ad08af58b5:/# </span><span class="nb">echo</span><span class="w"> </span>Hello,<span class="w"> </span>World!
+<span class="go">Hello, World!</span>
+<span class="gp">root@85ad08af58b5:/# </span>python
+<span class="go">Python 3.10.8 (main, Oct 25 2022, 05:40:26) [GCC 8.3.0] on linux</span>
+<span class="go">Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>We give <code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">exec</span></code> flags <code class="code docutils literal notranslate"><span class="pre">-it</span></code> which, like before, runs the
+command interactively with a pseudo TTY. We then give the ID of the container
+we want the command to be executed in and finally the command
+<code class="code docutils literal notranslate"><span class="pre">/bin/bash</span></code> itself. This starts an interactive bash shell that we can use
+for development.</p>
+<p>When we exit the shell, the container will still be running in the background.
+To stop the container, use the <code class="code docutils literal notranslate"><span class="pre">docker</span> <span class="pre">stop</span></code> command.</p>
+</section>
+</section>
+<section id="volumes">
+<h2><span class="section-number">3.3. </span>Volumes<a class="headerlink" href="#volumes" title="Link to this heading">#</a></h2>
+<p>Suppose you are are starting a project and you want to do your development
+inside a docker container. You could create a container like in the previous
+section and do everything inside the container. In particular you could store
+the files for your project inside the docker container. However, getting the
+files from the container onto the host machine can be tricky.</p>
+<p>Alternatively, you could attach your project files to the container using a
+volume. Think of this as sharing files and data between the host machine and
+the container. This means any changes made to the volume files inside the
+container will be reflected in the files on the host machine. Also, if the
+container is stopped or deleted, the files still exist on the host machine so
+no data will be lost.</p>
+<p>Suppose we have a simple project on our system with one file <code class="code docutils literal notranslate"><span class="pre">main.py</span></code>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">pwd</span>
+<span class="go">/home/user/my_project</span>
+<span class="gp">$ </span>ls
+<span class="go">main.py</span>
+</pre></div>
+</div>
+<p>The file <code class="code docutils literal notranslate"><span class="pre">main.py</span></code> is a simple script that prints some text.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># main.py</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This is main.py&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let us create a python docker container and attach the <code class="code docutils literal notranslate"><span class="pre">my_project</span></code>
+directory to the container. This is done with the <code class="code docutils literal notranslate"><span class="pre">-v</span></code> flag.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>run<span class="w"> </span>-itd<span class="w"> </span>-v<span class="w"> </span>/home/user/my_project:/my_project<span class="w"> </span>python:3.10-slim-buster
+<span class="go">1f181219691a3837f1830db590e88d8f1644be251b5915687db523096dff93fc</span>
+</pre></div>
+</div>
+<p>The argument passed to <code class="code docutils literal notranslate"><span class="pre">-v</span></code> contains two paths. The first path before the
+colon is the path to the directory (or file) on the host machine that we want
+to attach to the container. The second path after the colon is the path to the
+location where we want the directory (or file) to be stored in the docker
+container.</p>
+<p>Now, if we execute bash in the container, we should be able to navigate to our
+<code class="code docutils literal notranslate"><span class="pre">main.py</span></code> file.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>1f18<span class="w"> </span>/bin/bash
+<span class="gp">root@1f181219691a:/# </span><span class="nb">cd</span><span class="w"> </span>/my_project
+<span class="gp">root@1f181219691a:/my_project# </span>ls
+<span class="go">main.py</span>
+<span class="gp">root@1f181219691a:/my_project# </span>python<span class="w"> </span>main.py
+<span class="go">This is main.py</span>
+<span class="gp">root@1f181219691a:/my_project# </span>touch<span class="w"> </span>created_in_container.py
+<span class="gp">root@1f181219691a:/my_project# </span>ls
+<span class="go">created_in_container.py  main.py</span>
+<span class="gp">root@1f181219691a:/my_project# </span><span class="nb">exit</span>
+<span class="gp">$ </span>docker<span class="w"> </span>stop<span class="w"> </span>1f18
+<span class="go">1f18</span>
+<span class="gp">$ </span>docker<span class="w"> </span>rm<span class="w"> </span>1f18
+<span class="go">1f18</span>
+</pre></div>
+</div>
+<p>Above, we navigate to the <code class="code docutils literal notranslate"><span class="pre">/my_project</span></code> directory and run the
+<code class="code docutils literal notranslate"><span class="pre">main.py</span></code> script. We also create a new file called
+<code class="code docutils literal notranslate"><span class="pre">created_in_container.py</span></code> from within the container and exit the
+container. Finally we stop and delete the container.</p>
+<p>Since we attached the <code class="code docutils literal notranslate"><span class="pre">my_project</span></code> directory to the container using
+volumes, the <code class="code docutils literal notranslate"><span class="pre">created_in_container.py</span></code> file will exist on the host
+machine.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>/home/user/my_project
+<span class="gp">$ </span>ls
+<span class="go">created_in_container.py  main.py</span>
+</pre></div>
+</div>
+<p>Despite having stopped and deleted the container used to create
+<code class="code docutils literal notranslate"><span class="pre">created_in_container.py</span></code>, the file still exists on the host machine. One
+can use volumes to attached many files to a container such that changes made
+inside the container are reflected on the host machine.</p>
+<div role="list" class="citation-list">
+<div class="citation" id="drun" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">DRUN</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://docs.docker.com/engine/reference/commandline/run/">https://docs.docker.com/engine/reference/commandline/run/</a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="decorators.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Decorators</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dockerfile.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Dockerfile</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-docker-image">3.1. What is a Docker Image?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#docker-python-dev-environment">3.2. Docker Python Dev Environment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tldr">3.2.1. TLDR</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explore-docker-run">3.2.2. Explore Docker Run</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exlore-interactive-mode">3.2.3. Exlore Interactive Mode</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exlore-detached-mode">3.2.4. Exlore Detached Mode</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volumes">3.3. Volumes</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/Programming/docker.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Alex Gregory.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

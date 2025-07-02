@@ -1,0 +1,635 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>4. Eigenvalues and Eigenvectors &#8212; Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/notebookstyle.css?v=3b045b9e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Maths/eigenvalues_and_eigenvectors';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5. Matrix Operations" href="matrix_operations.html" />
+    <link rel="prev" title="3. Causality vs Correlation" href="causal_inference.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Notes</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Programming/index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Programming/index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="arithmetic_series.html">1. Arithmetic Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">2. Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="causal_inference.html">3. Causality vs Correlation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Eigenvalues and Eigenvectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix_operations.html">5. Matrix Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pythagorean_means.html">6. Pythagorean Means</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="shannon_entropy.html">8. Shannon Entropy</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Maths</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><span class="section-number">4. </span>Eigenvalues and Eigenvectors</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="eigenvalues-and-eigenvectors">
+<h1><span class="section-number">4. </span>Eigenvalues and Eigenvectors<a class="headerlink" href="#eigenvalues-and-eigenvectors" title="Link to this heading">#</a></h1>
+<p>For a square matrix <span class="math notranslate nohighlight">\(A\)</span>, its eigenvectors are vectors <span class="math notranslate nohighlight">\(x\)</span> such
+that,</p>
+<div class="math notranslate nohighlight">
+\[Ax = \lambda x\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\lambda \in R\)</span> is an eigenvalue of <span class="math notranslate nohighlight">\(x\)</span>. In other words, the
+eigenvectors of <span class="math notranslate nohighlight">\(A\)</span> are vectors that when transformed by <span class="math notranslate nohighlight">\(A\)</span> are
+only scaled by some factor <span class="math notranslate nohighlight">\(\lambda\)</span> rather than, for example, changing
+direction.</p>
+<section id="finding-eigenvalues-and-eigenvectors">
+<h2><span class="section-number">4.1. </span>Finding Eigenvalues and Eigenvectors<a class="headerlink" href="#finding-eigenvalues-and-eigenvectors" title="Link to this heading">#</a></h2>
+<p>In our equation above, there are two unknows: <span class="math notranslate nohighlight">\(\lambda\)</span>, and <span class="math notranslate nohighlight">\(x\)</span>.
+Rearanging, some of the terms, we get,</p>
+<div class="math notranslate nohighlight">
+\[(A - \lambda I) x = 0\]</div>
+<p>Where <span class="math notranslate nohighlight">\(I\)</span> is the identity matrix. If <span class="math notranslate nohighlight">\(A - \lambda I\)</span> is invertible
+then <span class="math notranslate nohighlight">\((A - \lambda I) ^ {-1} (A - \lambda I) x = (A - \lambda I) ^ {-1} 0
+\implies x = 0\)</span>. Therefore, for <span class="math notranslate nohighlight">\(x\)</span> to have a non-zero solution,
+<span class="math notranslate nohighlight">\(A - \lambda I\)</span> cannot be invertible, and thus,</p>
+<div class="math notranslate nohighlight">
+\[\det (A - \lambda I) = 0\]</div>
+<p>This gives a formula to find the eigenvalues of <span class="math notranslate nohighlight">\(A\)</span> which can then be
+substituted into <span class="math notranslate nohighlight">\((A - \lambda I) x = 0\)</span> to find the eigenvectors
+<span class="math notranslate nohighlight">\(x\)</span>.</p>
+</section>
+<section id="properties-of-eigenvalues-and-eigenvectors">
+<h2><span class="section-number">4.2. </span>Properties of Eigenvalues and Eigenvectors<a class="headerlink" href="#properties-of-eigenvalues-and-eigenvectors" title="Link to this heading">#</a></h2>
+<p>Several properties of eigenvalues and eigenvectors.</p>
+<ul class="simple">
+<li><p>Squaring a square matrix <span class="math notranslate nohighlight">\(A\)</span> squares its eigenvalues but its
+eigenvectors remain the same.</p></li>
+<li><p>The eigenvectors of a symmetric matrix are orthogonal.</p></li>
+<li><p>A square matrix <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> is invertible IFF its columns are linearly
+independent.</p></li>
+</ul>
+</section>
+<section id="properties-of-eigenvalues-and-eigenvectors-proofs">
+<h2><span class="section-number">4.3. </span>Properties of Eigenvalues and Eigenvectors (Proofs)<a class="headerlink" href="#properties-of-eigenvalues-and-eigenvectors-proofs" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Squaring a square matrix <span class="math notranslate nohighlight">\(A\)</span> squares its eigenvalues but its
+eigenvectors remain the same.</p></li>
+</ul>
+<p>Suppose <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> has the eigenvector <span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span> and
+eigenvalue <span class="math notranslate nohighlight">\(\lambda_i\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{A} \mathbf{x}_i = \lambda_i \mathbf{x}_i \\
+\mathbf{A} \mathbf{A} \mathbf{x}_i = \lambda_i \mathbf{A} \mathbf{x}_i \\
+\mathbf{A}^2 \mathbf{x}_i = \lambda_i^2 \mathbf{\mathbf{x}}_i. \\\end{split}\]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span> is an eigenvector of <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> and
+<span class="math notranslate nohighlight">\(\mathbf{A}^2\)</span>. And <span class="math notranslate nohighlight">\(\lambda_i\)</span> is an eigenvalue of
+<span class="math notranslate nohighlight">\(\mathbf{A}\)</span> but <span class="math notranslate nohighlight">\(\lambda_i^2\)</span> is an eigenvalue of
+<span class="math notranslate nohighlight">\(\mathbf{A}^2\)</span>.</p>
+<ul class="simple">
+<li><p>The eigenvectors of a symmetric matrix are orthogonal.</p></li>
+</ul>
+<p>Suppose <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> is a two dimensional matrix with two eigenvectors
+and two distinct eigenvalues.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}A x_1 &amp; = \lambda_1 x_1, \\
+x_2^T A x_1 &amp; = \lambda_1 x_2^T x_1. \\\end{split}\]</div>
+<p>And,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}A x_2 &amp; = \lambda_2 x_2, &amp; \\
+x_1^T A x_2 &amp; = \lambda_2 x_1^T x_2, &amp; \\
+x_2^T A^T x_1 &amp; = \lambda_2 x_2^T x_1. &amp; \\
+x_2^T A x_1 &amp; = \lambda_2 x_2^T x_1. &amp; \quad \text{(Symmetric)}\\\end{split}\]</div>
+<p>Taking both equations from each other, we get,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}x_2^T A x_1 - x_2^T A x_1 &amp; = (\lambda_2 - \lambda_1) x_2^T x_1^T \\
+0 &amp; = (\lambda_2 - \lambda_1) x_2^T x_1^T\end{split}\]</div>
+<p>Since <span class="math notranslate nohighlight">\(\lambda_1\)</span> and <span class="math notranslate nohighlight">\(\lambda_2\)</span> are distinct,
+<span class="math notranslate nohighlight">\((\lambda_2 - \lambda_1)\)</span> is non-zero, therefore,
+<span class="math notranslate nohighlight">\(x_2^T x_1^T\)</span> must be zero. Thus, <span class="math notranslate nohighlight">\(x_2\)</span> and
+<span class="math notranslate nohighlight">\(x_1\)</span> are orthogonal.</p>
+<section id="the-determinant-of-a-is-the-product-of-its-eigenvalues">
+<h3><span class="section-number">4.3.1. </span>The determinant of <span class="math notranslate nohighlight">\(A\)</span> is the product of its eigenvalues<a class="headerlink" href="#the-determinant-of-a-is-the-product-of-its-eigenvalues" title="Link to this heading">#</a></h3>
+<p>The eigenvalues <span class="math notranslate nohighlight">\(\lambda_1, \lambda_2, \dots, \lambda_n\)</span>, are the roots
+of its characteristic polynomial.</p>
+<div class="math notranslate nohighlight">
+\[\det (A - \lambda I) = (\lambda_1 - \lambda) (\lambda_2 - \lambda) \dots (\lambda_n - \lambda)\]</div>
+<p>Setting <span class="math notranslate nohighlight">\(\lambda\)</span> to <span class="math notranslate nohighlight">\(0\)</span>, we get,</p>
+<div class="math notranslate nohighlight">
+\[\det (A) = \lambda_1 \lambda_2 \dots \lambda_n\]</div>
+</section>
+<section id="the-trace-of-a-is-equal-to-the-sum-of-its-eigenvalues">
+<h3><span class="section-number">4.3.2. </span>The trace of <span class="math notranslate nohighlight">\(A\)</span> is equal to the sum of its eigenvalues<a class="headerlink" href="#the-trace-of-a-is-equal-to-the-sum-of-its-eigenvalues" title="Link to this heading">#</a></h3>
+<p>For this, we only prove for the <span class="math notranslate nohighlight">\(2 \times 2\)</span> case. Let <span class="math notranslate nohighlight">\(A\)</span> be the
+following matrix,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}A = \begin{pmatrix}
+   a &amp; b \\
+   c &amp; d \\
+\end{pmatrix}\end{split}\]</div>
+<p>Find the eigenvalues of <span class="math notranslate nohighlight">\(A\)</span> using its charateristic polynomial.</p>
+<div class="math notranslate nohighlight">
+\[\det (A - \lambda I) = (a - \lambda) (d - \lambda) - bc = \lambda ^ 2 - (a + d) \lambda - bc\]</div>
+<p>Using the quatratic formula, we get,</p>
+<div class="math notranslate nohighlight">
+\[\lambda = \frac{a + d \pm \sqrt{\ldots}}{2}\]</div>
+<p>Therefore,</p>
+<div class="math notranslate nohighlight">
+\[\lambda_1 + \lambda_2 = a + d\]</div>
+</section>
+<section id="ax-0-has-a-non-trivial-solution-iff-the-columns-of-a-are-linearly-independent">
+<h3><span class="section-number">4.3.3. </span><span class="math notranslate nohighlight">\(Ax = 0\)</span> has a non-trivial solution IFF the columns of <span class="math notranslate nohighlight">\(A\)</span> are linearly independent<a class="headerlink" href="#ax-0-has-a-non-trivial-solution-iff-the-columns-of-a-are-linearly-independent" title="Link to this heading">#</a></h3>
+<p>Suppose the columns of <span class="math notranslate nohighlight">\(A\)</span> are linearly independent. Let the vectors
+<span class="math notranslate nohighlight">\(v_1, v_2, \dots, v_n\)</span> be the columns of <span class="math notranslate nohighlight">\(A\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{A} \mathbf{x} = \mathbf{0} \implies \begin{pmatrix}\mathbf{v}_1 &amp; \mathbf{v}_2 &amp; \dots &amp; \mathbf{v}_n\end{pmatrix} \mathbf{x} = \mathbf{0}.\]</div>
+<p>This can be rewritten as,</p>
+<div class="math notranslate nohighlight">
+\[x_1 \mathbf{v}_1 + x_2 \mathbf{v}_2 + \dots + x_n \mathbf{v}_n = \mathbf{0}.\]</div>
+<p>Since the columns of <span class="math notranslate nohighlight">\(A\)</span> are linearly independent, some column
+<span class="math notranslate nohighlight">\(v_i\)</span> can be expressed as a combination of the other columns. Therefore,
+there must be solution to the equation above where some of the scalars
+<span class="math notranslate nohighlight">\(x_1, x_2, \dots, x_n\)</span> are non-zero.</p>
+</section>
+<section id="ax-0-has-a-non-trivial-solution-iff-a-is-invertible">
+<h3><span class="section-number">4.3.4. </span><span class="math notranslate nohighlight">\(Ax = 0\)</span> has a non-trivial solution IFF <span class="math notranslate nohighlight">\(A\)</span> is invertible<a class="headerlink" href="#ax-0-has-a-non-trivial-solution-iff-a-is-invertible" title="Link to this heading">#</a></h3>
+<aside class="topic">
+<p class="topic-title">Theorem</p>
+<p>A square matrix <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> is invertible IFF its columns are linearly independent.</p>
+<p><strong>Proof</strong></p>
+<p>This proof is taken from <a class="reference external" href="https://sparse-plex.readthedocs.io/en/latest/book/matrices/invertible_matrices.html">https://sparse-plex.readthedocs.io/en/latest/book/matrices/invertible_matrices.html</a>.</p>
+<p><em>Step 1</em>. Suppose that <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> is invertible. By definition, the columns of <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> are linearly independent if <span class="math notranslate nohighlight">\(\mathbf{A x} = \mathbf{0}\)</span> only when <span class="math notranslate nohighlight">\(\mathbf{x} = \mathbf{0}\)</span>. Since <span class="math notranslate nohighlight">\(A\)</span> has an inverse,</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{A}^{-1} \mathbf{A x} = \mathbf{0} \implies \mathbf{x} = \mathbf{0}\]</div>
+<p><em>Step 2</em>. If the columns of <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> are linearly independent, then <span class="math notranslate nohighlight">\(\mathbf{A} \mathbf{x} = \mathbf{b}\)</span> has a unique solution. If <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> has an inverse then there exists a matrix <span class="math notranslate nohighlight">\(\mathbf{B}\)</span> such that <span class="math notranslate nohighlight">\(\mathbf{B A} = \mathbf{I}\)</span>. Suppose that <span class="math notranslate nohighlight">\(e_i\)</span> represents the <span class="math notranslate nohighlight">\(i\)</span>-th column of <span class="math notranslate nohighlight">\(\mathbf{I}\)</span> such that the <span class="math notranslate nohighlight">\(i\)</span>-th element of <span class="math notranslate nohighlight">\(\mathbf{e}_i\)</span> is 1.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{AB} =
+\begin{bmatrix}
+    | &amp; | &amp; \dots &amp; | \\
+    \mathbf{AB}_1 &amp; \mathbf{AB}_2 &amp; \dots &amp; \mathbf{AB}_n \\
+    | &amp; | &amp; \dots &amp; | \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+    | &amp; | &amp; \dots &amp; | \\
+    \mathbf{e}_1 &amp; \mathbf{e}_2 &amp; \dots &amp; \mathbf{e}_n \\
+    | &amp; | &amp; \dots &amp; | \\
+\end{bmatrix}\end{split}\]</div>
+<p>Since the columns of <span class="math notranslate nohighlight">\(A\)</span> are linearly independent, <span class="math notranslate nohighlight">\(\mathbf{AB}_i = \mathbf{e}_i\)</span> has a unique solution. Thus we can find each column <span class="math notranslate nohighlight">\(\mathbf{B}_i\)</span> thus <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> is invertible.</p>
+</aside>
+<aside class="topic">
+<p class="topic-title">Theorem</p>
+<p>A symmetric matrix <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> with distinct eigenvalues has orthogonal eigenvectors.</p>
+<p><strong>Proof</strong></p>
+<p>We only prove for the <span class="math notranslate nohighlight">\(2 \times 2\)</span> case where <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> has two eigenvectors.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{A} \mathbf{x}_1 &amp; = \lambda_1 \mathbf{x}_1 \\
+\mathbf{x}_2^T \mathbf{A} \mathbf{x}_1 &amp; = \lambda_1 \mathbf{x}_2^T \mathbf{x}_1 \\\end{split}\]</div>
+<p>And,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{A x}_2 &amp; = \lambda_2 \mathbf{x}_2 \\
+\mathbf{x}_1^T \mathbf{A x}_2 &amp; = \lambda_2 \mathbf{x}_1^T \mathbf{x}_2 \\
+\mathbf{x}_2^T \mathbf{A x}_1 &amp; = \lambda_2 \mathbf{x}_2^T \mathbf{x}_1 \\\end{split}\]</div>
+<p>Taking these away from each other, we have,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{x}_2^T \mathbf{A x}_1 - \mathbf{x}_2^T \mathbf{A x}_1 &amp; = (\lambda_1 - \lambda_2) \mathbf{x}_2^T \mathbf{x}_1 \\
+0 &amp; = (\lambda_1 - \lambda_2) \mathbf{x}_2^T \mathbf{x}_1\end{split}\]</div>
+<p>Since <span class="math notranslate nohighlight">\(\lambda_1\)</span> and <span class="math notranslate nohighlight">\(\lambda_2\)</span> are distinct, their difference is non-zero. Therefore, <span class="math notranslate nohighlight">\(\mathbf{x}_2^T \mathbf{x}_1\)</span> must be <span class="math notranslate nohighlight">\(0\)</span>.</p>
+</aside>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="causal_inference.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Causality vs Correlation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="matrix_operations.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Matrix Operations</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-eigenvalues-and-eigenvectors">4.1. Finding Eigenvalues and Eigenvectors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-eigenvalues-and-eigenvectors">4.2. Properties of Eigenvalues and Eigenvectors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-eigenvalues-and-eigenvectors-proofs">4.3. Properties of Eigenvalues and Eigenvectors (Proofs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-determinant-of-a-is-the-product-of-its-eigenvalues">4.3.1. The determinant of <span class="math notranslate nohighlight">\(A\)</span> is the product of its eigenvalues</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-trace-of-a-is-equal-to-the-sum-of-its-eigenvalues">4.3.2. The trace of <span class="math notranslate nohighlight">\(A\)</span> is equal to the sum of its eigenvalues</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ax-0-has-a-non-trivial-solution-iff-the-columns-of-a-are-linearly-independent">4.3.3. <span class="math notranslate nohighlight">\(Ax = 0\)</span> has a non-trivial solution IFF the columns of <span class="math notranslate nohighlight">\(A\)</span> are linearly independent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ax-0-has-a-non-trivial-solution-iff-a-is-invertible">4.3.4. <span class="math notranslate nohighlight">\(Ax = 0\)</span> has a non-trivial solution IFF <span class="math notranslate nohighlight">\(A\)</span> is invertible</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/Maths/eigenvalues_and_eigenvectors.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Alex Gregory.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

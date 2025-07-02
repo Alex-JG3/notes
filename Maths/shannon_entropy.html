@@ -1,0 +1,656 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>8. Shannon Entropy &#8212; Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/notebookstyle.css?v=3b045b9e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Maths/shannon_entropy';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Stats" href="../Stats/index.html" />
+    <link rel="prev" title="6. Pythagorean Means" href="pythagorean_means.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Notes</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Programming/index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Programming/index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="arithmetic_series.html">1. Arithmetic Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">2. Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="causal_inference.html">3. Causality vs Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eigenvalues_and_eigenvectors.html">4. Eigenvalues and Eigenvectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix_operations.html">5. Matrix Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pythagorean_means.html">6. Pythagorean Means</a></li>
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">8. Shannon Entropy</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Maths</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><span class="section-number">8. </span>Shannon Entropy</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="shannon-entropy">
+<h1><span class="section-number">8. </span>Shannon Entropy<a class="headerlink" href="#shannon-entropy" title="Link to this heading">#</a></h1>
+<p>Shannon entropy can be used to measure the uncertainty in a probability
+distribution.</p>
+<p>From this should on whenever we refer to <em>entropy</em> we are referring to <em>shannon
+entropy</em> unless stated otherwise.</p>
+<p>Shannon introduced this concept of entropy in his paper <em>A Mathematical Theory
+of Communication</em> <a class="reference internal" href="bibliography.html#shan48" id="id1"><span>[Shan48]</span></a></p>
+<section id="intuitive-explanation-of-uncertainty">
+<h2><span class="section-number">8.1. </span>Intuitive Explanation of Uncertainty<a class="headerlink" href="#intuitive-explanation-of-uncertainty" title="Link to this heading">#</a></h2>
+<p>Suppose we have three random variables,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+    X_1 = &amp; \{ A, A, A, A, A, A, A, A \}, \\
+    X_2 = &amp; \{ A, A, A, A, B, B, B, B \}, \\
+    X_3 = &amp; \{ A, A, B, B, C, C, D, D \}. \\
+\end{align}\end{split}\]</div>
+<p>Suppose we sample a random character <span class="math notranslate nohighlight">\(x_i\)</span> from the random variable
+<span class="math notranslate nohighlight">\(X_i\)</span></p>
+<ul class="simple">
+<li><p>Since <span class="math notranslate nohighlight">\(X_1\)</span> only contain ‘A’, we are certain <span class="math notranslate nohighlight">\(x_i\)</span> is ‘A’.</p></li>
+<li><p><span class="math notranslate nohighlight">\(X_2\)</span> contains ‘A’s and ‘B’s so we cannot be certain whether
+<span class="math notranslate nohighlight">\(x_2\)</span> is an ‘A’ or a ‘B’. So, we are less certain about <span class="math notranslate nohighlight">\(x_2\)</span>
+than we are about <span class="math notranslate nohighlight">\(x_3\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(X_3\)</span> contains ‘A’s, ‘B’s, ‘C’s, and ‘D’s so we less certain about
+<span class="math notranslate nohighlight">\(x_3\)</span> than <span class="math notranslate nohighlight">\(X_2\)</span>.</p></li>
+</ul>
+<p>Entropy is a way of quantifying this uncertainty.</p>
+</section>
+<section id="formula-for-entropy">
+<h2><span class="section-number">8.2. </span>Formula for Entropy<a class="headerlink" href="#formula-for-entropy" title="Link to this heading">#</a></h2>
+<p>Suppose we have a random variable <span class="math notranslate nohighlight">\(X = \{ x_1, x_2, \dots, x_n \}\)</span> where
+<span class="math notranslate nohighlight">\(P(X = x_i) = p_i\)</span>. The shannon entropy of <span class="math notranslate nohighlight">\(X\)</span> is,</p>
+<div class="math notranslate nohighlight">
+\[H(X) = \sum_{i = 0}^{n} p_i \log p_i.\]</div>
+</section>
+<section id="example-coin-toss">
+<h2><span class="section-number">8.3. </span>Example: Coin Toss<a class="headerlink" href="#example-coin-toss" title="Link to this heading">#</a></h2>
+<p>Suppose we flip a coin. The probability of getting a heads is <span class="math notranslate nohighlight">\(0.5\)</span>. The
+entropy for this random variable is,</p>
+<div class="math notranslate nohighlight">
+\[H(X) = 0.5 * \log 0.5 + 0.5 * \log 0.5 = 1\]</div>
+<p>This corresponds to the number of bits needed to convey the outcome of the coin
+toss; 1 being heads and 0 being tails for example. However, we will see in the
+next example that this is not the best way to think about this. Instead
+consider we ask one binary questions: Is the coin heads. This is enough to
+encode all the outcomes of the experiment.</p>
+</section>
+<section id="example-a-random-variable-with-more-outcomes">
+<h2><span class="section-number">8.4. </span>Example: A random variable with more outcomes<a class="headerlink" href="#example-a-random-variable-with-more-outcomes" title="Link to this heading">#</a></h2>
+<p>Suppose we have a random variable <span class="math notranslate nohighlight">\(X = \{a, b, c, d\}\)</span> such that each
+event is equally likely to happen. In this case,</p>
+<div class="math notranslate nohighlight">
+\[H(X) = 4 \cdot 0.25 \cdot \log 0.25 = 2.\]</div>
+<p>Again, this corresponds to the number of bits needed to convey the outcome of
+the random variable: <span class="math notranslate nohighlight">\(00=a\)</span>, <span class="math notranslate nohighlight">\(01=b\)</span>, <span class="math notranslate nohighlight">\(10=c\)</span>, and
+<span class="math notranslate nohighlight">\(11=d\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}P_X(x)
+\begin{cases}
+    0.5 &amp; \text{if x} = a \\
+    0.25 &amp; \text{if x} = b \\
+    0.125 &amp; \text{if x} = c \\
+    0.125 &amp; \text{if x} = d \\
+\end{cases}\end{split}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(H(X) = \frac{7}{4}\)</span>. Why is the number of bits needed to convey
+the message less when the probability of each event was equal? Suppose we ask
+the binary questions: “Is <span class="math notranslate nohighlight">\(X = a\)</span>”, “Is <span class="math notranslate nohighlight">\(X = b\)</span>”, “Is
+<span class="math notranslate nohighlight">\(X = c\)</span>”. The expected number of binary questions we have to ask is,</p>
+<div class="math notranslate nohighlight">
+\[1 \cdot 0.5 + 2 \cdot 0.25 + 3 \cdot 0.125 = 1.75.\]</div>
+<p>Which is the same as the entropy. It can be shown that entropy is the minimum
+expected number of binary questions needed to determine <span class="math notranslate nohighlight">\(X\)</span>.</p>
+</section>
+<section id="axioms-use-to-derive-entropy">
+<h2><span class="section-number">8.5. </span>Axioms Use to Derive Entropy<a class="headerlink" href="#axioms-use-to-derive-entropy" title="Link to this heading">#</a></h2>
+<p>In Shannon’s paper, presents three axioms that a measure of a uncertainty
+should follow and then shows the only function that satisfies these axioms is
+the function above. The axioms are as follows:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(H\)</span> should be continuous on the probabilities <span class="math notranslate nohighlight">\(p_i\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(H\)</span> should me monotonically increasing.</p></li>
+<li><p>If an event can be broken down into multiple choices, the entropy of the
+event should be equal to the weighted sum of the entropy of its component
+choices.</p></li>
+</ol>
+<p>Axiom 3 is not as obvious as the other two so it is worth looking at it a
+little more closely. Suppose we have a random variable
+<span class="math notranslate nohighlight">\(X = {A, A, A, B, B, C}\)</span>. If we were the pick a character at random from
+<span class="math notranslate nohighlight">\(X\)</span> the entropy of this system would be,</p>
+<div class="math notranslate nohighlight">
+\[H(\frac{1}{3}, \frac{1}{3}, \frac{1}{6})\]</div>
+<p>Suppose that the character we pick depends on the previous character in the
+list. The choices and probabilities are shown in the figure below.</p>
+<img alt="../_images/choices.png" class="align-center" src="../_images/choices.png" />
+<p>Axiom 3 means,</p>
+<div class="math notranslate nohighlight">
+\[H(\frac{1}{3}, \frac{1}{3}, \frac{1}{6}) = H(\frac{3}{5}, \frac{2}{5}) + \frac{3}{5} H(\frac{2}{3}, \frac{1}{3}) + \frac{2}{5} H(\frac{1}{2}, \frac{1}{2})\]</div>
+</section>
+<section id="properties-of-entropy">
+<h2><span class="section-number">8.6. </span>Properties of Entropy<a class="headerlink" href="#properties-of-entropy" title="Link to this heading">#</a></h2>
+<p>Shannon derives a number of properties, some are listed here.</p>
+<p>a. <span class="math notranslate nohighlight">\(H = 0\)</span> if and only if <span class="math notranslate nohighlight">\(p_i = 1\)</span> and all other probabilities are
+<span class="math notranslate nohighlight">\(0\)</span>.</p>
+<ol class="loweralpha simple" start="2">
+<li><p>Suppose we have a random variable with <span class="math notranslate nohighlight">\(n\)</span> possibilities, the maximum
+of <span class="math notranslate nohighlight">\(H\)</span> will be when <span class="math notranslate nohighlight">\(p_i = \frac{1}{n}\)</span> for
+<span class="math notranslate nohighlight">\(n \in \{ 0, 1, \dots, n - 1 \}\)</span>.</p></li>
+<li><p>Suppose we have two random variables <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> which have
+<span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(m\)</span> possibilities respectively. Let
+<span class="math notranslate nohighlight">\(P(X=x_i, Y=y_i) = p_{i, j}\)</span>. The entropy of this joint event is,</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[H(X, Y) = - \sum_{i, j} p_{i, j} \log p_{i, j}.\]</div>
+<p>Also,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}H(X) = - \sum_{i, j} p_{i, j} \log \sum_{j} p_{i, j}, \\
+H(Y) = - \sum_{i, j} p_{i, j} \log \sum_{i} p_{i, j}.\end{split}\]</div>
+<p>It can also be shown that,</p>
+<div class="math notranslate nohighlight">
+\[H(X, Y) \leq H(X) + H(Y)\]</div>
+<ol class="loweralpha simple" start="4">
+<li><p>Suppose we have two random variables <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> that are not
+necessarily independent. The conditional probability is defined as,</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[P(Y=y_i \vert X=x_i) = p_{y_i \vert x_i} = \frac{p_{x_i, y_j}}{\sum_{j} p_{x_i, y_j}}.\]</div>
+<p>The conditional entropy is defined as,</p>
+<div class="math notranslate nohighlight">
+\[H_{x_i}(Y) = - \sum_{i, j} p_{x_i, y_j} \log p_{y_i \vert x_i}\]</div>
+</section>
+<section id="appendix-entropy-property-proofs">
+<h2><span class="section-number">8.7. </span>Appendix: Entropy Property Proofs<a class="headerlink" href="#appendix-entropy-property-proofs" title="Link to this heading">#</a></h2>
+<p>Proofs of the properties defined above.</p>
+<section id="property-a">
+<h3><span class="section-number">8.7.1. </span>Property A<a class="headerlink" href="#property-a" title="Link to this heading">#</a></h3>
+<p>Suppose we probabilities <span class="math notranslate nohighlight">\(p = {p_0, p_1, \dots, p_{n_1}}\)</span> where
+<span class="math notranslate nohighlight">\(p_i = 1\)</span> and the rest of the probabilities are <span class="math notranslate nohighlight">\(0\)</span>. For <span class="math notranslate nohighlight">\(i\)</span>
+we have,</p>
+<div class="math notranslate nohighlight">
+\[p_i \log p_i = \log 1 = 0.\]</div>
+<p>For <span class="math notranslate nohighlight">\(j\)</span> where <span class="math notranslate nohighlight">\(j \neq i\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[p_j \log p_j = 0 \log 0 = 0.\]</div>
+<p>So every term in <span class="math notranslate nohighlight">\(H\)</span> is zero so <span class="math notranslate nohighlight">\(H = 0\)</span>.</p>
+</section>
+<section id="property-b">
+<h3><span class="section-number">8.7.2. </span>Property B<a class="headerlink" href="#property-b" title="Link to this heading">#</a></h3>
+<p>This proof is taken from here
+<a class="reference external" href="https://math.stackexchange.com/questions/3579001/prove-the-maximum-value-of-entropy-function">https://math.stackexchange.com/questions/3579001/prove-the-maximum-value-of-entropy-function</a>.</p>
+<p>Using Jensen’s Inequality,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}H(X) = &amp; - \sum_{i} p_i \log p_i \\
+     = &amp; \sum_{i} p_i \log \frac{1}{p_i} \\
+  \leq &amp; \log \sum_{i} p_i \frac{1}{p_i} \\
+     = &amp; \log n.\end{split}\]</div>
+<p>By substituting in <span class="math notranslate nohighlight">\(p_i = \frac{1}{n}\)</span> to the entropy formula we get,</p>
+<div class="math notranslate nohighlight">
+\[H(x) = - \sum_{i} \frac{1}{n} \log \frac{1}{n} = \log n\]</div>
+<p>Which is the upper bound.</p>
+</section>
+<section id="property-c">
+<h3><span class="section-number">8.7.3. </span>Property C<a class="headerlink" href="#property-c" title="Link to this heading">#</a></h3>
+<p>This proof is taken from
+<a class="reference external" href="https://math.stackexchange.com/questions/4153125/shannons-proof-that-joint-entropy-is-less-or-equal-to-the-sum-of-marginal-entro">https://math.stackexchange.com/questions/4153125/shannons-proof-that-joint-entropy-is-less-or-equal-to-the-sum-of-marginal-entro</a>.</p>
+<p>Shannon entropy is,</p>
+<div class="math notranslate nohighlight">
+\[H(x) = - \sum_{i} p_i \log p_i.\]</div>
+<p>Since we have joint probabilities we have <span class="math notranslate nohighlight">\(p_i = \sum_{j} p_{i, j}\)</span>.
+Substituting this into the entropy formula, we get,</p>
+<div class="math notranslate nohighlight">
+\[H(x) = - \sum_{i, j} p_{i, j} \log \sum_j p_{i, j}.\]</div>
+<p>Finally, again using Jensen’s inequality,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+    H(X, Y) - H(X) - H(Y) &amp;    = - \sum_{i, j} p_{i, j} \log p_{i, j} + \sum_{i, j} p_{i, j} \log \sum_k p_{i, k} + \sum_{i, j} p_{i, j} \log \sum_k p_{k, j} \\
+                          &amp;    = \sum_{i, j} p_{i, j} \log \frac{\sum_k p_{i, k} \sum_k p_{k, j}}{p_{i, j}} \\
+                          &amp; \leq \log \sum_{i, j} p_{i, j} \frac{\sum_k p_{i, k} \sum_k p_{k, j}}{p_{i, j}} \\
+                          &amp;    = \log \sum_{i, j} \sum_k p_{i, k} \sum_k p_{k, j} \\
+                          &amp;    = \log 1 = 0
+\end{align}\end{split}\]</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pythagorean_means.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Pythagorean Means</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../Stats/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Stats</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuitive-explanation-of-uncertainty">8.1. Intuitive Explanation of Uncertainty</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#formula-for-entropy">8.2. Formula for Entropy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-coin-toss">8.3. Example: Coin Toss</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-a-random-variable-with-more-outcomes">8.4. Example: A random variable with more outcomes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#axioms-use-to-derive-entropy">8.5. Axioms Use to Derive Entropy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-entropy">8.6. Properties of Entropy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix-entropy-property-proofs">8.7. Appendix: Entropy Property Proofs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#property-a">8.7.1. Property A</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#property-b">8.7.2. Property B</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#property-c">8.7.3. Property C</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/Maths/shannon_entropy.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Alex Gregory.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

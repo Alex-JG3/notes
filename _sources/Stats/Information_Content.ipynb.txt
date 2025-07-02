@@ -1,0 +1,200 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "407d55a7-6296-4d78-b09d-b47413fe861f",
+   "metadata": {},
+   "source": [
+    "# Information Content\n",
+    "\n",
+    "Information content is a measure of the surprise associated with an event from a random variable.\n",
+    "\n",
+    "The formula for information content is as follows,\n",
+    "\n",
+    "$$\n",
+    "I(x) = \\log \\frac{1}{P(X = x)}\n",
+    "$$\n",
+    "\n",
+    "Let us build some intuition around why this is a good measure of surprise.\n",
+    "\n",
+    "Claude suggested that a good measure of information content should satisfy the following axioms:\n",
+    "\n",
+    "1. Events that are more unlikely should results in more information.\n",
+    "2. An event with 100% probability should results in zero information.\n",
+    "3. If two events are measured, the total amount of information gained should be the sum of $I$.\n",
+    "\n",
+    "Let us look at a simple example, suppose we flip a fair coin. The outcomes of this random variable, $X$, are either $H$ or $T$ each of which have 50% probability of occuring. What is the information content of these events?\n",
+    "\n",
+    "The examples present in this notebook are lifted from *Information Theory, Inference, and Learning Algorithms* by *David J.C. MacKay*"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8ff7d041-a114-4385-890a-9b4362efffb5",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "import math\n",
+    "\n",
+    "def entropy(p):\n",
+    "    return - math.log2(p)\n",
+    "\n",
+    "print(entropy(0.5))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e32aff23-6d43-4db2-812c-b0b6ca768af0",
+   "metadata": {},
+   "source": [
+    "The information we gain from this coin flip is 1 bit. We can encode the outcome of the coin flip using 1 bit of information so this makes sense.\n",
+    "\n",
+    "Now let us suppose we play a simple game of battleship on an 8 x 8 grid. Suppose that in this game we are trying to guess the position of one battleship that takes up one square in the grid.\n",
+    "\n",
+    "The probability we find the battleship is $\\frac{1}{64}$. What is the information we gain from this event?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0fc3e4c1-e067-4b6e-ae3e-b426cf082660",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "6.0"
+      ]
+     },
+     "execution_count": null,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "entropy(1 / 64)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5e00f1f3-1571-4b22-94ae-987037884ba9",
+   "metadata": {
+    "tags": []
+   },
+   "source": [
+    "We get 6 bits of information which is more that the coin flip. This is not surprising as finding the battleship is a rairer event.\n",
+    "\n",
+    "Suppose now we hit the battle ship on the 32-nd guess. The entropy for this event is as follows."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "99182b4a-bc8b-4c9b-8543-634403492803",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "6.0"
+      ]
+     },
+     "execution_count": null,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "total_information = 0\n",
+    "n = 64\n",
+    "for i in range(1, 32):\n",
+    "    total_information += entropy((n - 1) / n)\n",
+    "    n -= 1\n",
+    "\n",
+    "total_information += entropy(1 / n)\n",
+    "total_information"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4af0d6b8-0ce4-47fe-8bb1-e2e8051e5d4c",
+   "metadata": {},
+   "source": [
+    "In fact no matter when we find the battleship, the total information will be 6 bits.\n",
+    "\n",
+    "$$\n",
+    "\\log \\left( \\frac{64}{63} \\right) + \\log \\left( \\frac{63}{62} \\right) + \\log \\left( \\frac{62}{61} \\right) + \\dots + \\log \\left(\\frac{n+1}{n} \\right) + \\log \\left(\\frac{n}{1} \\right) = \\log(64) = 6\n",
+    "$$\n",
+    "\n",
+    "Things are not as nice however when the number of squares in the grid is not a power of two. For example if we have 65 squares, the information we get from finding the ship of the first guess is,"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "77f016f4-d93e-4bd5-a8e2-28445a4de5e9",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "6.022367813028454"
+      ]
+     },
+     "execution_count": null,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "entropy(1 / 65)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "24444d00-c8d8-4245-8728-a593efab3061",
+   "metadata": {},
+   "source": [
+    "We don't get the nice round numbers we were seeing before. Therefore, information content should not be thought of as simply the number of bits needed to encode the events of a random variable."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.11"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

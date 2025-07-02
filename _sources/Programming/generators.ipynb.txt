@@ -1,0 +1,162 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "09cdc6eb-0334-41ec-a925-f5dc56221563",
+   "metadata": {},
+   "source": [
+    "Python provides binary operators for working with integers.\n",
+    "\n",
+    "One can get the binary representation of an integer using an f-string."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "6ef79780-1654-4f4d-9258-87c920b1a514",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1\n",
+      "100\n",
+      "1010\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"{1:b}\")\n",
+    "print(f\"{4:b}\")\n",
+    "print(f\"{10:b}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "140e62b1-23a8-41cc-b44c-8ff4953ec85d",
+   "metadata": {},
+   "source": [
+    "## Binary operators\n",
+    "\n",
+    "* `&` bitwise and: `2 & 3 = 0`"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "c7c8a145-0092-41f4-8f80-727e88000bfd",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "a : 2 : 10\n",
+      "b : 3 : 11\n",
+      "and : a & b : 2 : 10\n",
+      "or  : a | b : 3 : 11\n",
+      "xor : a ^ b : 1 : 1\n",
+      "a ^ b : 1 : 1\n"
+     ]
+    }
+   ],
+   "source": [
+    "a, b = 2, 3\n",
+    "print(f\"a : {a} : {a:b}\")\n",
+    "print(f\"b : {b} : {b:b}\")\n",
+    "print(f\"and : a & b : {a & b} : {a & b:b}\")\n",
+    "print(f\"or  : a | b : {a | b} : {a | b:b}\")\n",
+    "print(f\"xor : a ^ b : {a ^ b} : {a ^ b:b}\")\n",
+    "print(f\"a ^ b : {a ^ b} : {a ^ b:b}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bff1301e-4053-4ef8-8a56-0761f8a145ea",
+   "metadata": {},
+   "source": [
+    "# Queen"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e59a7610-a82c-4950-aa6d-0784c29c53d6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "    class Queens:\n",
+    "    def __init__(self, n):\n",
+    "        self.n = n\n",
+    "        rangen = range(n)\n",
+    "\n",
+    "        # Assign a unique int to each column and diagonal.\n",
+    "        # columns:  n of those, range(n).\n",
+    "        # NW-SE diagonals: 2n-1 of these, i-j unique and invariant along\n",
+    "        # each, smallest i-j is 0-(n-1) = 1-n, so add n-1 to shift to 0-\n",
+    "        # based.\n",
+    "        # NE-SW diagonals: 2n-1 of these, i+j unique and invariant along\n",
+    "        # each, smallest i+j is 0, largest is 2n-2.\n",
+    "\n",
+    "        # For each square, compute a bit vector of the columns and\n",
+    "        # diagonals it covers, and for each row compute a function that\n",
+    "        # generates the possibilities for the columns in that row.\n",
+    "        self.rowgenerators = []\n",
+    "        for i in rangen:\n",
+    "            rowuses = [(1 << j) |                  # column ordinal\n",
+    "                       (1 << (n + i-j + n-1)) |    # NW-SE ordinal\n",
+    "                       (1 << (n + 2*n-1 + i+j))    # NE-SW ordinal\n",
+    "                            for j in rangen]\n",
+    "\n",
+    "            def rowgen(rowuses=rowuses):\n",
+    "                for j in rangen:\n",
+    "                    uses = rowuses[j]\n",
+    "                    if uses & self.used == 0:\n",
+    "                        self.used |= uses\n",
+    "                        yield j\n",
+    "                        self.used &= ~uses\n",
+    "\n",
+    "            self.rowgenerators.append(rowgen)\n",
+    "\n",
+    "    # Generate solutions.\n",
+    "    def solve(self):\n",
+    "        self.used = 0\n",
+    "        for row2col in conjoin(self.rowgenerators):\n",
+    "            yield row2col\n",
+    "\n",
+    "    def printsolution(self, row2col):\n",
+    "        n = self.n\n",
+    "        assert n == len(row2col)\n",
+    "        sep = \"+\" + \"-+\" * n\n",
+    "        print(sep)\n",
+    "        for i in range(n):\n",
+    "            squares = [\" \" for j in range(n)]\n",
+    "            squares[row2col[i]] = \"Q\"\n",
+    "            print(\"|\" + \"|\".join(squares) + \"|\")\n",
+    "            print(sep)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

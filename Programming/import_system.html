@@ -1,0 +1,652 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>8. The Python Import System &#8212; Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/notebookstyle.css?v=3b045b9e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Programming/import_system';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="9. Linux" href="linux.html" />
+    <link rel="prev" title="7. Generators and Recursion" href="generators_and_recursion.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Notes</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Maths/index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Maths/index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="bash.html">1. Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html">2. Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">3. Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dockerfile.html">4. Dockerfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generators.html">5. Binary operators</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="generators_and_recursion.html">7. Generators and Recursion</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">8. The Python Import System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux.html">9. Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monads.html">10. Monads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nqueens.html">11. N-Queens</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_broadcasting.html">12. Broadcasting in Numpy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regular_expressions.html">13. Regular Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminal_commands.html">14. Terminal Commands</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Programming</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><span class="section-number">8. </span>The Python Import System</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="the-python-import-system">
+<h1><span class="section-number">8. </span>The Python Import System<a class="headerlink" href="#the-python-import-system" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>Main takeaways:</p>
+<ul class="simple">
+<li><p>Suppose we have a directory called <code class="code docutils literal notranslate"><span class="pre">root</span></code> with the following files:
+<code class="code docutils literal notranslate"><span class="pre">package/module.py</span></code>, and <code class="code docutils literal notranslate"><span class="pre">package/script.py</span></code>.</p></li>
+<li><p>From inside <code class="code docutils literal notranslate"><span class="pre">root</span></code>, running <code class="code docutils literal notranslate"><span class="pre">python3</span> <span class="pre">package/script.py</span></code> will
+add <code class="code docutils literal notranslate"><span class="pre">package</span></code> to <code class="code docutils literal notranslate"><span class="pre">sys.path</span></code> meaning <code class="code docutils literal notranslate"><span class="pre">from</span> <span class="pre">package</span>
+<span class="pre">import</span> <span class="pre">module</span></code> will raise an import error in <code class="code docutils literal notranslate"><span class="pre">script.py</span></code>.</p></li>
+<li><p>From inside <code class="code docutils literal notranslate"><span class="pre">root</span></code>, running <code class="code docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">package.script</span></code> will
+add <code class="code docutils literal notranslate"><span class="pre">root</span></code> to <code class="code docutils literal notranslate"><span class="pre">sys.path</span></code> meaning <code class="code docutils literal notranslate"><span class="pre">from</span> <span class="pre">package</span> <span class="pre">import</span>
+<span class="pre">module</span></code> will not raise an import error in <code class="code docutils literal notranslate"><span class="pre">script.py</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>When importing a package or module, python searches for it on its
+<code class="code docutils literal notranslate"><span class="pre">sys.path</span></code>. Suppose we have the following project structure.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>root
+└── package
+    ├── module.py
+    └── script.py
+</pre></div>
+</div>
+<p>Where <code class="code docutils literal notranslate"><span class="pre">module.py</span></code> contains the following code.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">print_module</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Print from module.py&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And <code class="code docutils literal notranslate"><span class="pre">script.py</span></code> has the following code.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">package.directory</span><span class="w"> </span><span class="kn">import</span> <span class="n">module</span>
+
+<span class="n">print_module</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Executing <code class="code docutils literal notranslate"><span class="pre">script.py</span></code> from <code class="code docutils literal notranslate"><span class="pre">root</span></code> gives us an import error.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 package/script.py
+Traceback (most recent call last):
+  File &quot;/home/alex/root/package/script.py&quot;, line 1, in &lt;module&gt;
+    from package.directory import module
+ModuleNotFoundError: No module named &#39;package&#39;
+</pre></div>
+</div>
+<p>Even though we are running the code from the <code class="code docutils literal notranslate"><span class="pre">root</span></code> directory which
+contains <code class="code docutils literal notranslate"><span class="pre">package</span></code>, we cannot import <code class="code docutils literal notranslate"><span class="pre">module</span></code> into
+<code class="code docutils literal notranslate"><span class="pre">script.py</span></code>. Let us print <code class="code docutils literal notranslate"><span class="pre">sys.path</span></code> at the top of
+<code class="code docutils literal notranslate"><span class="pre">script.py</span></code> and rerun the script.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># script.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">package</span><span class="w"> </span><span class="kn">import</span> <span class="n">module</span>
+
+<span class="n">print_module</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Running <code class="code docutils literal notranslate"><span class="pre">script.py</span></code>, we get.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 package/script.py
+[&#39;/home/alex/root/package&#39;, &#39;/usr/lib/python310.zip&#39;, &#39;/usr/lib/python3.10&#39;, &#39;/usr/lib/python3.10/lib-dynload&#39;, &#39;/home/alex/documents/notes/.venv/lib/python3.10/site-packages&#39;]
+Traceback (most recent call last):
+  File &quot;/home/alex/root/package/script.py&quot;, line 2, in &lt;module&gt;
+    from package.directory import module
+ModuleNotFoundError: No module named &#39;package&#39;
+</pre></div>
+</div>
+<p>The first element in the list points to our <code class="code docutils literal notranslate"><span class="pre">package</span></code> directory. This
+means that python will look for <code class="code docutils literal notranslate"><span class="pre">package</span></code> within the <code class="code docutils literal notranslate"><span class="pre">package</span></code>
+directory. We want it to look for <code class="code docutils literal notranslate"><span class="pre">package</span></code> for the <code class="code docutils literal notranslate"><span class="pre">root</span></code>
+directory.</p>
+<p>This import error can also be solved by removing <code class="code docutils literal notranslate"><span class="pre">package</span></code> from the
+import path.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># script.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">module</span>
+
+<span class="n">module</span><span class="o">.</span><span class="n">print_module</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The code now runs successfully from <code class="code docutils literal notranslate"><span class="pre">root</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 package/script.py
+Print from module.py
+</pre></div>
+</div>
+<p>However, if we move <code class="code docutils literal notranslate"><span class="pre">script.py</span></code> into <code class="code docutils literal notranslate"><span class="pre">root</span></code> we will get the same
+import error again. For clarity, moving <code class="code docutils literal notranslate"><span class="pre">script.py</span></code> into <code class="code docutils literal notranslate"><span class="pre">root</span></code>
+means our file structure now looks like this.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>root
+├── script.py
+└── package
+    └── module.py
+</pre></div>
+</div>
+<p>Executing <code class="code docutils literal notranslate"><span class="pre">script.py</span></code> results in the import error.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 script.py
+Traceback (most recent call last):
+  File &quot;/home/alex/root/script.py&quot;, line 1, in &lt;module&gt;
+    import module
+ModuleNotFoundError: No module named &#39;module&#39;
+</pre></div>
+</div>
+<p>To get the script to run successfully, we would have to change our import from
+<code class="code docutils literal notranslate"><span class="pre">import</span> <span class="pre">module</span></code> to <code class="code docutils literal notranslate"><span class="pre">from</span> <span class="pre">package</span> <span class="pre">import</span> <span class="pre">module</span></code>.</p>
+<p>For simplicity, I want to be able to import <code class="code docutils literal notranslate"><span class="pre">package.module</span></code> into a
+script no matter where the script is in the <code class="code docutils literal notranslate"><span class="pre">root</span></code> directory. We will
+discuss three ways of doing this but first let us change our project structure
+slightly to include <code class="code docutils literal notranslate"><span class="pre">script1.py</span></code> and <code class="code docutils literal notranslate"><span class="pre">script2.py</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>root
+├── script1.py
+└── package
+    ├── script2.py
+    └── module.py
+</pre></div>
+</div>
+<p>Where <code class="code docutils literal notranslate"><span class="pre">script1.py</span></code> and <code class="code docutils literal notranslate"><span class="pre">script2.py</span></code> have just about the same code.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># script1.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">package</span><span class="w"> </span><span class="kn">import</span> <span class="n">module</span>
+
+<span class="n">module</span><span class="o">.</span><span class="n">print_module</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># script2.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">package</span><span class="w"> </span><span class="kn">import</span> <span class="n">module</span>
+
+<span class="n">module</span><span class="o">.</span><span class="n">print_module</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The first script, <code class="code docutils literal notranslate"><span class="pre">script1.py</span></code>, runs successfully but <code class="code docutils literal notranslate"><span class="pre">script2.py</span></code>
+does not.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 script1.py
+Print from module.py
+$ python3 package/script2.py
+python3: can&#39;t open file &#39;/home/alex/root/script2.py&#39;: [Errno 2] No such file or directory
+</pre></div>
+</div>
+<p>Now we will run through three ways of solving this issue.</p>
+<section id="running-scripts-and-modules">
+<h2><span class="section-number">8.1. </span>Running Scripts and Modules<a class="headerlink" href="#running-scripts-and-modules" title="Link to this heading">#</a></h2>
+<p>The <code class="code docutils literal notranslate"><span class="pre">-m</span></code> flag can be used to run our program as a module instead of a
+script. This will make both of <code class="code docutils literal notranslate"><span class="pre">script1.py</span></code> and <code class="code docutils literal notranslate"><span class="pre">script2.py</span></code> work.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 -m script1
+Print from module.py
+$ python3 -m module.script2
+Print from module.py
+</pre></div>
+</div>
+<p>Let us run this experiment again but print <code class="code docutils literal notranslate"><span class="pre">sys.path</span></code> at the start of the
+scripts.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># script1.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">package</span><span class="w"> </span><span class="kn">import</span> <span class="n">module</span>
+
+<span class="n">module</span><span class="o">.</span><span class="n">print_module</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># script2.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">package</span><span class="w"> </span><span class="kn">import</span> <span class="n">module</span>
+
+<span class="n">module</span><span class="o">.</span><span class="n">print_module</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Running the scripts gives us the following.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 -m package.script2
+[&#39;/home/alex/root&#39;, &#39;/usr/lib/python310.zip&#39;, &#39;/usr/lib/python3.10&#39;, &#39;/usr/lib/python3.10/lib-dynload&#39;, &#39;/home/alex/documents/notes/.venv/lib/python3.10/site-packages&#39;]
+Print from module.py
+$ python3 -m script1
+[&#39;/home/alex/root&#39;, &#39;/usr/lib/python310.zip&#39;, &#39;/usr/lib/python3.10&#39;, &#39;/usr/lib/python3.10/lib-dynload&#39;, &#39;/home/alex/documents/notes/.venv/lib/python3.10/site-packages&#39;]
+Print from module.py
+</pre></div>
+</div>
+<p>Running the scripts with <code class="code docutils literal notranslate"><span class="pre">-m</span></code> flag adds the <code class="code docutils literal notranslate"><span class="pre">root</span></code> directory to
+<code class="code docutils literal notranslate"><span class="pre">sys.path</span></code>. If we <code class="code docutils literal notranslate"><span class="pre">cd</span></code> into <code class="code docutils literal notranslate"><span class="pre">package</span></code> and run
+<code class="code docutils literal notranslate"><span class="pre">script2.py</span></code> we get the familiar import error.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd package
+$ python3 -m script2
+[&#39;/home/alex/root/package&#39;, &#39;/usr/lib/python310.zip&#39;, &#39;/usr/lib/python3.10&#39;, &#39;/usr/lib/python3.10/lib-dynload&#39;, &#39;/home/alex/documents/notes/.venv/lib/python3.10/site-packages&#39;]
+Traceback (most recent call last):
+  File &quot;/usr/lib/python3.10/runpy.py&quot;, line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File &quot;/usr/lib/python3.10/runpy.py&quot;, line 86, in _run_code
+    exec(code, run_globals)
+  File &quot;/home/alex/root/package/script2.py&quot;, line 2, in &lt;module&gt;
+    from package import module
+ModuleNotFoundError: No module named &#39;package&#39;
+</pre></div>
+</div>
+<p>So, as long as we run our scripts from <code class="code docutils literal notranslate"><span class="pre">root</span></code> with the <code class="code docutils literal notranslate"><span class="pre">-m</span></code> flag,
+we should be able to import <code class="code docutils literal notranslate"><span class="pre">package.module</span></code> since <code class="code docutils literal notranslate"><span class="pre">root</span></code> has been
+added to <code class="code docutils literal notranslate"><span class="pre">sys.path</span></code>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generators_and_recursion.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">7. </span>Generators and Recursion</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="linux.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>Linux</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-scripts-and-modules">8.1. Running Scripts and Modules</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/Programming/import_system.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Alex Gregory.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

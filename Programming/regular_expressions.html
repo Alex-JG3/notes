@@ -1,0 +1,756 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>13. Regular Expressions &#8212; Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/notebookstyle.css?v=3b045b9e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Programming/regular_expressions';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="14. Terminal Commands" href="terminal_commands.html" />
+    <link rel="prev" title="12. Broadcasting in Numpy" href="numpy_broadcasting.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Notes</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Maths/index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Maths/index.html">
+    Maths
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../Stats/index.html">
+    Stats
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="bash.html">1. Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html">2. Decorators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">3. Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dockerfile.html">4. Dockerfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generators.html">5. Binary operators</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="generators_and_recursion.html">7. Generators and Recursion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="import_system.html">8. The Python Import System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux.html">9. Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monads.html">10. Monads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nqueens.html">11. N-Queens</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_broadcasting.html">12. Broadcasting in Numpy</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">13. Regular Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminal_commands.html">14. Terminal Commands</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Programming</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><span class="section-number">13. </span>Regular Expressions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="regular-expressions">
+<h1><span class="section-number">13. </span>Regular Expressions<a class="headerlink" href="#regular-expressions" title="Link to this heading">#</a></h1>
+<p>A regular expression (often shortened to regex) is a sequence of characters
+that can be used to search for patterns of text. Regexes appear all over the
+place. This article covers some of the basic syntax.</p>
+<section id="regex-in-python">
+<h2><span class="section-number">13.1. </span>Regex in Python<a class="headerlink" href="#regex-in-python" title="Link to this heading">#</a></h2>
+<p>The python standard library has the <code class="code docutils literal notranslate"><span class="pre">re</span></code> module for working with regular
+expressions. <code class="code docutils literal notranslate"><span class="pre">re.match</span></code> finds patterns in text strings.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello, World!&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+<span class="go">&lt;re.Match object; span=(0, 5), match=&#39;Hello&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">span</span><span class="p">()</span>
+<span class="go">(0, 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;ll&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+<span class="go">&lt;re.Match object; span=(2, 4), match=&#39;ll&#39;&gt;</span>
+</pre></div>
+</div>
+<p>If the pattern is present in the text, <code class="code docutils literal notranslate"><span class="pre">re.search</span></code> returns a
+<code class="code docutils literal notranslate"><span class="pre">re.Match</span></code> object. You can retrieve the start and end point of the match
+using the <code class="code docutils literal notranslate"><span class="pre">span</span></code> method. If the pattern is not present in the string,
+<code class="code docutils literal notranslate"><span class="pre">re.search</span></code> returns <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello, World!&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;Random&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;Random&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>
+<span class="go">None</span>
+</pre></div>
+</div>
+<p>Regex provides a rich syntax for matching complex patterns. For example,
+<code class="code docutils literal notranslate"><span class="pre">+</span></code> matches to one or more repetition of the preceding character.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello, World!&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;l+&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, World&quot;</span><span class="p">)</span>
+<span class="go">&lt;re.Match object; span=(2, 4), match=&#39;ll&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;l+&quot;</span><span class="p">,</span> <span class="s2">&quot;Helllo, World&quot;</span><span class="p">)</span>
+<span class="go">&lt;re.Match object; span=(2, 5), match=&#39;lll&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;l+&quot;</span><span class="p">,</span> <span class="s2">&quot;Hellllo, World&quot;</span><span class="p">)</span>
+<span class="go">&lt;re.Match object; span=(2, 6), match=&#39;llll&#39;&gt;</span>
+</pre></div>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">re.search</span></code> does not match the second <code class="code docutils literal notranslate"><span class="pre">l</span></code></p>
+<p>The second <code class="code docutils literal notranslate"><span class="pre">l</span></code> in <code class="code docutils literal notranslate"><span class="pre">World</span></code> is not matched because <code class="code docutils literal notranslate"><span class="pre">re.search</span></code>
+only matches the first instance of the pattern. <code class="code docutils literal notranslate"><span class="pre">re.finall</span></code> matches all
+instances of the pattern and returns the matches in a list.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello, World!&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;l+&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, World&quot;</span><span class="p">)</span>
+<span class="go">[&#39;ll&#39;, &#39;l&#39;]</span>
+</pre></div>
+</div>
+</section>
+<section id="quantifiers">
+<h2><span class="section-number">13.2. </span>Quantifiers<a class="headerlink" href="#quantifiers" title="Link to this heading">#</a></h2>
+<p>Quantifiers specify how many instanstances of a character or group must be
+present for a match to be found.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantifier</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="code docutils literal notranslate"><span class="pre">*</span></code></p></td>
+<td><p>Matches zero or more repetitions of the preceding character.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="code docutils literal notranslate"><span class="pre">+</span></code></p></td>
+<td><p>Matches one or more repetitions of the preceding character.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="code docutils literal notranslate"><span class="pre">?</span></code></p></td>
+<td><p>Matches zero or one repetitions of the preceding character.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="code docutils literal notranslate"><span class="pre">{n}</span></code></p></td>
+<td><p>Matches exactly <code class="code docutils literal notranslate"><span class="pre">n</span></code> repetitions of the preceding character.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="code docutils literal notranslate"><span class="pre">{n,}</span></code></p></td>
+<td><p>Matches at least <code class="code docutils literal notranslate"><span class="pre">n</span></code> repetitions of the preceding character.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="code docutils literal notranslate"><span class="pre">{n,m}</span></code></p></td>
+<td><p>Matches between <code class="code docutils literal notranslate"><span class="pre">n</span></code> and <code class="code docutils literal notranslate"><span class="pre">m</span></code> repetitions of the preceding
+character.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Below are examples of each quantifier.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello, Mel, Ankle&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;el+&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, Mel, eat&quot;</span><span class="p">)</span>
+<span class="go">[&#39;ell&#39;, &#39;el&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;el?&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, Mel, eat&quot;</span><span class="p">)</span>
+<span class="go">[&#39;el&#39;, &#39;el&#39;, &#39;e&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;el*&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, Mel, eat&quot;</span><span class="p">)</span>
+<span class="go">[&#39;ell&#39;, &#39;el&#39;, &#39;e&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;el</span><span class="si">{2}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, Mel, eat&quot;</span><span class="p">)</span>
+<span class="go">[&#39;ell&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;el{1,}&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, Mel, eat&quot;</span><span class="p">)</span>
+<span class="go">[&#39;ell&#39;, &#39;el&#39;]</span>
+</pre></div>
+</div>
+</section>
+<section id="regex-syntax">
+<h2><span class="section-number">13.3. </span>Regex Syntax<a class="headerlink" href="#regex-syntax" title="Link to this heading">#</a></h2>
+<dl>
+<dt><code class="code docutils literal notranslate"><span class="pre">.</span></code></dt><dd><p>Matches any single character other than the newline character (<code class="code docutils literal notranslate"><span class="pre">n</span></code>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;H.llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;H.llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hxllo, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;H.llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hxxllo, World!&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;H.llo&quot;</span><span class="p">,</span> <span class="s2">&quot;H</span><span class="se">\n</span><span class="s2">llo, World!&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="code docutils literal notranslate"><span class="pre">?</span></code></dt><dd><p>Matches the previous regex for 0 or 1 repetitions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He?llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He?llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hllo, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He?llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Heello, World!&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He?llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hxllo, World!&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="code docutils literal notranslate"><span class="pre">+</span></code></dt><dd><p>Matches the previous regex for 1 or more repetitions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He+llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He+llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Heeello, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He+llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hllo, World!&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="code docutils literal notranslate"><span class="pre">*</span></code></dt><dd><p>Matches the previous regex for 0 or more repetitions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He*llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He*llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Heeello, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He*llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hllo, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="code docutils literal notranslate"><span class="pre">^</span></code></dt><dd><p>Matches the start of the string.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^World&quot;</span><span class="p">,</span> <span class="s2">&quot;Heeello, World!&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="code docutils literal notranslate"><span class="pre">$</span></code></dt><dd><p>Matches the end of the string.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;foo$&quot;</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;bar$&quot;</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;foobar$&quot;</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="code docutils literal notranslate"><span class="pre">{m,n}</span></code></dt><dd><p>Match next <code class="code docutils literal notranslate"><span class="pre">m</span></code> to <code class="code docutils literal notranslate"><span class="pre">n</span></code> characters to previous regex.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He</span><span class="si">{3}</span><span class="s2">llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, World!&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He</span><span class="si">{3}</span><span class="s2">llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Heeello, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He{2,3}llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Heello, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He{2,3}llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Heeello, World!&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;He{2,3}llo&quot;</span><span class="p">,</span> <span class="s2">&quot;Heeeello, World!&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="code docutils literal notranslate"><span class="pre">[]</span></code></dt><dd><p>Used to define character sets.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Match 6 chars to chars &#39;f&#39;, &#39;o&#39;, &#39;b&#39;, &#39;a&#39;, and &#39;r&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[fobar]</span><span class="si">{6}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[fobar]</span><span class="si">{6}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;fo3bar&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Match 6 chars to chars &#39;a&#39; to &#39;z&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[a-z]</span><span class="si">{6}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[a-z]</span><span class="si">{6}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;fo3bar&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Match 6 chars to chars &#39;a&#39; to &#39;z&#39; or &#39;1&#39; to &#39;9&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[a-z1-9]</span><span class="si">{6}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;fo3bar&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Match 6 chars to chars &#39;A&#39; to &#39;Z&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[A-Z]</span><span class="si">{6}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Match 6 chars to chars &#39;A&#39; to &#39;Z&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[A-Z]</span><span class="si">{6}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;FOOBAR&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="code docutils literal notranslate"><span class="pre">()</span></code></dt><dd><p>Used to define groups.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Matches to &#39;a&#39; or &#39;bc&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(a|bc)&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(a|bc)&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(a|bc)&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<section id="grep">
+<h3><span class="section-number">13.3.1. </span>Grep<a class="headerlink" href="#grep" title="Link to this heading">#</a></h3>
+<p>Grep is a program common on most Unix-like systems. It is used for finding
+patterns in text. Suppose the file <code class="code docutils literal notranslate"><span class="pre">text.txt</span></code> contains the follow text.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Line 1</span>
+<span class="go">Line 2</span>
+<span class="go">This is the final line</span>
+</pre></div>
+</div>
+<p>Here are some examples of how to use grep.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>grep<span class="w"> </span>This<span class="w"> </span>text.txt
+<span class="go">Line 1</span>
+<span class="go">Line 2</span>
+<span class="gp">$ </span>grep<span class="w"> </span>--invert-match<span class="w"> </span>This<span class="w"> </span>text.txt
+<span class="go">This is the final line</span>
+<span class="gp">$ </span>grep<span class="w"> </span>--ignore-case<span class="w"> </span>this<span class="w"> </span>text.text
+<span class="go">This is the final line</span>
+<span class="gp">$ </span>grep<span class="w"> </span>--file<span class="o">=</span>text.txt<span class="w"> </span>--regexp<span class="o">=</span>Line
+<span class="go">Line 1</span>
+<span class="go">Line 2</span>
+<span class="gp">$ </span>grep<span class="w"> </span>--count<span class="w"> </span>Line<span class="w"> </span>text.txt
+<span class="go">2</span>
+<span class="gp">$ </span>grep<span class="w"> </span>^Line<span class="w"> </span><span class="o">(</span><span class="m">1</span><span class="p">|</span><span class="m">2</span><span class="o">)</span><span class="w"> </span>file1.txt
+<span class="go">zsh: no matches found: (1|2)</span>
+<span class="gp">$ </span>grep<span class="w"> </span><span class="s2">&quot;^Line (1|2)&quot;</span><span class="w"> </span>file1.txt
+<span class="gp">$ </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^Line (1|2)&quot;</span><span class="w"> </span>file1.txt
+<span class="go">Line 1</span>
+<span class="go">Line 2</span>
+</pre></div>
+</div>
+<section id="grep-multiple-files">
+<h4><span class="section-number">13.3.1.1. </span>Grep Multiple Files<a class="headerlink" href="#grep-multiple-files" title="Link to this heading">#</a></h4>
+<p>Suppose we have the following directory structure.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">directory</span>
+<span class="go">   file1.txt</span>
+<span class="go">   file2.txt</span>
+</pre></div>
+</div>
+<p>Suppose <code class="code docutils literal notranslate"><span class="pre">directory/file1.txt</span></code> has the following text.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Line 1 in file1</span>
+<span class="go">Line 2 in file1</span>
+<span class="go">This is the final line in file 1</span>
+</pre></div>
+</div>
+<p>And <code class="code docutils literal notranslate"><span class="pre">directory/file2.txt</span></code> has the following text.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Line 1 in file2</span>
+<span class="go">Line 2 in file2</span>
+<span class="go">This is the final line in file 2</span>
+</pre></div>
+</div>
+<p>We can grep patterns in multiple files.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>grep<span class="w"> </span>Line<span class="w"> </span>directory/*.txt
+<span class="go">file1.txt:Line 1 in file1</span>
+<span class="go">file1.txt:Line 2 in file1</span>
+<span class="go">file2.txt:Line 1 in file2</span>
+<span class="go">file2.txt:Line 2 in file2</span>
+<span class="gp">$ </span>grep<span class="w"> </span>Line<span class="w"> </span>--recursive<span class="w"> </span>directory
+<span class="go">file1.txt:Line 1 in file1</span>
+<span class="go">file1.txt:Line 2 in file1</span>
+<span class="go">file2.txt:Line 1 in file2</span>
+<span class="go">file2.txt:Line 2 in file2</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="numpy_broadcasting.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">12. </span>Broadcasting in Numpy</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="terminal_commands.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">14. </span>Terminal Commands</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regex-in-python">13.1. Regex in Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quantifiers">13.2. Quantifiers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regex-syntax">13.3. Regex Syntax</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grep">13.3.1. Grep</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#grep-multiple-files">13.3.1.1. Grep Multiple Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/Programming/regular_expressions.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022, Alex Gregory.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

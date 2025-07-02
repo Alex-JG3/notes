@@ -1,0 +1,391 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "0213bfce-de02-40b4-91b4-240fd38c4219",
+   "metadata": {},
+   "source": [
+    "# Broadcasting in Numpy"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "00b51432-f55f-4837-82bf-0b72a2742489",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "\n",
+    "import os\n",
+    "import pathlib\n",
+    "\n",
+    "root = pathlib.Path(os.getcwd())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "92910f7a-d674-4420-8188-b7c1df3e35ca",
+   "metadata": {},
+   "source": [
+    "## Taking the mean from each row\n",
+    "\n",
+    "If mean have a matrix of shape (2, 3). Using `numpy.mean`, we can get the mean of each row as a vector with shape (2). In number, we cannot take the vector from the matrix as the shapes are not broadcastable. Numpy checks it two arrays are broadcastable by looking from the right-most dimension to the left. The arrays are broadcastable if:\n",
+    "\n",
+    "1. The dimensions are equal, or\n",
+    "2. One of the dimensions is 1.\n",
+    "\n",
+    "In our example, the array and vector are not broadastable since the right-most dimensions, 3 and 2, are not broadcastable. We can make the arrays broadcastable by adding a dimension to the vector on the right. This means the matrix has shape (2, 3) and the vector has shape (2, 1): 2 is broadcastable to 2 and 3 is broadcastable to 1."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "617b7d79-7edc-47d4-9270-158fdd0df9fe",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "operands could not be broadcast together with shapes (2,3) (2,) \n",
+      "[[ 1.  0. -1.]\n",
+      " [ 1.  0. -1.]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "x = np.array([\n",
+    "    [1, 0, -1],\n",
+    "    [3, 2, 1]\n",
+    "])\n",
+    "\n",
+    "mean = x.mean(axis=1)  # Array with shape (3,)\n",
+    "try:\n",
+    "    x - mean\n",
+    "except ValueError as e:\n",
+    "    print(e)\n",
+    "\n",
+    "mean = mean[:, None]  # Array with shape (2, 1) \n",
+    "\n",
+    "print(x - mean)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b4d01699-68b6-4b65-93bc-2900380d50e5",
+   "metadata": {},
+   "source": [
+    "## Taking the mean from each column\n",
+    "\n",
+    "In this case, if we find the mean of column and store then in a vector with shape (3,), this is broadcastable with original array since the right most dimensions are the same.\n",
+    "\n",
+    "What about the first dimension?\n",
+    "\n",
+    "If there are not the same number of dimensions, you can think of numpy filling the missing dimensions with ones."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "a454ad43-3a2f-41e3-8599-73ddc53f6e30",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[-1. -1. -1.]\n",
+      " [ 1.  1.  1.]]\n",
+      "\n",
+      "[[-1. -1. -1.]\n",
+      " [ 1.  1.  1.]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "x = np.array([\n",
+    "    [1, 0, -1],\n",
+    "    [3, 2, 1]\n",
+    "])\n",
+    "\n",
+    "mean = x.mean(axis=0)  # Array with shape (2,)\n",
+    "print(x - mean, end=\"\\n\\n\")\n",
+    "\n",
+    "mean = mean[None, :]\n",
+    "print(x - mean)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "210b6ab0-ee45-43a2-bce5-66fd24fca359",
+   "metadata": {},
+   "source": [
+    "## Example from one point to every other point\n",
+    "\n",
+    "Suppose we want to find the euclidean distance from one point to every other point."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "987b87ae-b68c-400e-aed5-854386a11261",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([0.        , 1.        , 1.41421356])"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x = np.array([1.0, 1.0])\n",
+    "\n",
+    "y = np.array([\n",
+    "    [1.0, 1.0],\n",
+    "    [1.0, 2.0],\n",
+    "    [0.0, 0.0],\n",
+    "])\n",
+    "\n",
+    "((x[None, :] - y) ** 2).sum(axis=1) ** (0.5)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "514ff685-a675-4e11-859c-231f68424feb",
+   "metadata": {},
+   "source": [
+    "How to we work out the distance from every point in $y$ to every other point in $y$? The non-trivial part is the substraction, this is where we take advantage of broadcasting. The solution is,\n",
+    "\n",
+    "$$\n",
+    "\\begin{align}\n",
+    "    y[3 \\times 1 \\times 2] - y[1 \\times 3 \\times 2].\n",
+    "\\end{align}\n",
+    "$$\n",
+    "\n",
+    "Why does this work? The final shape will be (3, 3, 2) which is what we want. To make it so the arrays can be taken away from one another. Think of the dimensions where the shape is 1 being stretched to match the other matrix. So the second dimension for the array on the left is stretched to have shape 3.\n",
+    "\n",
+    "What is put in the extra entries? The elements in the dimensions right of the one we are stretching are essentially copied. So, for the array on the left, since the second dimension is being stretched, the third dimension will be copied to fill in the gaps."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "92ebb589-e0af-47a7-956b-02d7c31600fb",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[[ 0.,  0.],\n",
+       "        [ 0., -1.],\n",
+       "        [ 1.,  1.]],\n",
+       "\n",
+       "       [[ 0.,  1.],\n",
+       "        [ 0.,  0.],\n",
+       "        [ 1.,  2.]],\n",
+       "\n",
+       "       [[-1., -1.],\n",
+       "        [-1., -2.],\n",
+       "        [ 0.,  0.]]])"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "(y[:, None, :] - y[None, :, :])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8a88477b-f7f1-48a2-9fac-be46da9f43be",
+   "metadata": {
+    "tags": []
+   },
+   "source": [
+    "So the left matrix contains three (3, 2) matrix that only contain copies of one of the rows. The matrix on the right has the original (3, 2) matrix copied three times.\n",
+    "\n",
+    "Let us now calculate all the distances."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "984bc9dd-0b76-47f2-b174-0359b283349b",
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[0.        , 1.        , 1.41421356],\n",
+       "       [1.        , 0.        , 2.23606798],\n",
+       "       [1.41421356, 2.23606798, 0.        ]])"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "((y[:, None, :] - y[None, :, :]) ** 2).sum(axis=2) ** (0.5)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ac6494b0-9dc9-4d5e-9944-034657d4aff3",
+   "metadata": {},
+   "source": [
+    "## Visual example\n",
+    "\n",
+    "Here the goal is to end up with a matrix of zeros. Here is simple 2D example."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "c0f43904-0fab-4bc8-abbe-1c4fa2c0f499",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[0, 0],\n",
+       "       [0, 0]])"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x = np.array([\n",
+    "    [1, 1],\n",
+    "    [2, 2],\n",
+    "])\n",
+    "\n",
+    "y = np.array([1, 2])\n",
+    "\n",
+    "x - y[:, None]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c40d5fef-cf30-424d-8a57-a4ddfcc29fbe",
+   "metadata": {},
+   "source": [
+    "Below is a visual representation of what is going on here. It is easy to see here what happend when the `y[:, None]` is stretched."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "3786bb99-efff-4e30-99a9-9b384f02c82a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "iVBORw0KGgoAAAANSUhEUgAAAc0AAABvCAYAAACO5ptMAAAAAXNSR0IArs4c6QAAI7B0RVh0bXhmaWxlACUzQ214ZmlsZSUyMGhvc3QlM0QlMjJhcHAuZGlhZ3JhbXMubmV0JTIyJTIwbW9kaWZpZWQlM0QlMjIyMDIzLTA2LTE5VDE2JTNBNTklM0E0OC40NzFaJTIyJTIwYWdlbnQlM0QlMjJNb3ppbGxhJTJGNS4wJTIwKFdpbmRvd3MlMjBOVCUyMDEwLjAlM0IlMjBXaW42NCUzQiUyMHg2NCklMjBBcHBsZVdlYktpdCUyRjUzNy4zNiUyMChLSFRNTCUyQyUyMGxpa2UlMjBHZWNrbyklMjBDaHJvbWUlMkYxMTQuMC4wLjAlMjBTYWZhcmklMkY1MzcuMzYlMjIlMjBldGFnJTNEJTIySmRaN3NIaEdDV2dCY2twcDVkaXIlMjIlMjB2ZXJzaW9uJTNEJTIyMjEuMy43JTIyJTIwdHlwZSUzRCUyMmRldmljZSUyMiUzRSUwQSUyMCUyMCUzQ2RpYWdyYW0lMjBuYW1lJTNEJTIyUGFnZS0xJTIyJTIwaWQlM0QlMjI1alZYaTRTZVBIVzFLTWJqR0ZKSCUyMiUzRSUwQSUyMCUyMCUyMCUyMCUzQ214R3JhcGhNb2RlbCUyMGR4JTNEJTIyMjQ5MCUyMiUyMGR5JTNEJTIyMTM3MyUyMiUyMGdyaWQlM0QlMjIxJTIyJTIwZ3JpZFNpemUlM0QlMjIxMCUyMiUyMGd1aWRlcyUzRCUyMjElMjIlMjB0b29sdGlwcyUzRCUyMjElMjIlMjBjb25uZWN0JTNEJTIyMSUyMiUyMGFycm93cyUzRCUyMjElMjIlMjBmb2xkJTNEJTIyMSUyMiUyMHBhZ2UlM0QlMjIwJTIyJTIwcGFnZVNjYWxlJTNEJTIyMSUyMiUyMHBhZ2VXaWR0aCUzRCUyMjgyNyUyMiUyMHBhZ2VIZWlnaHQlM0QlMjIxMTY5JTIyJTIwbWF0aCUzRCUyMjAlMjIlMjBzaGFkb3clM0QlMjIwJTIyJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTNDcm9vdCUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ214Q2VsbCUyMGlkJTNEJTIyMCUyMiUyMCUyRiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ214Q2VsbCUyMGlkJTNEJTIyMSUyMiUyMHBhcmVudCUzRCUyMjAlMjIlMjAlMkYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteENlbGwlMjBpZCUzRCUyMmwyU0pqQ3E3YUthRjRMWV9wcEZxLTElMjIlMjB2YWx1ZSUzRCUyMiUyMiUyMHN0eWxlJTNEJTIycm91bmRlZCUzRDAlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQmh0bWwlM0QxJTNCZm9udFNpemUlM0QxNiUzQmZpbGxDb2xvciUzRCUyM2Y4Y2VjYyUzQnN0cm9rZUNvbG9yJTNEJTIzYjg1NDUwJTNCJTIyJTIwcGFyZW50JTNEJTIyMSUyMiUyMHZlcnRleCUzRCUyMjElMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteEdlb21ldHJ5JTIweCUzRCUyMi05MjAlMjIlMjB5JTNEJTIyLTQwMCUyMiUyMHdpZHRoJTNEJTIyNDAlMjIlMjBoZWlnaHQlM0QlMjI0MCUyMiUyMGFzJTNEJTIyZ2VvbWV0cnklMjIlMjAlMkYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZteENlbGwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteENlbGwlMjBpZCUzRCUyMmwyU0pqQ3E3YUthRjRMWV9wcEZxLTMlMjIlMjB2YWx1ZSUzRCUyMiUyMiUyMHN0eWxlJTNEJTIycm91bmRlZCUzRDAlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQmh0bWwlM0QxJTNCZm9udFNpemUlM0QxNiUzQmZpbGxDb2xvciUzRCUyM2Y4Y2VjYyUzQnN0cm9rZUNvbG9yJTNEJTIzYjg1NDUwJTNCJTIyJTIwcGFyZW50JTNEJTIyMSUyMiUyMHZlcnRleCUzRCUyMjElMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteEdlb21ldHJ5JTIweCUzRCUyMi04ODAlMjIlMjB5JTNEJTIyLTQwMCUyMiUyMHdpZHRoJTNEJTIyNDAlMjIlMjBoZWlnaHQlM0QlMjI0MCUyMiUyMGFzJTNEJTIyZ2VvbWV0cnklMjIlMjAlMkYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZteENlbGwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteENlbGwlMjBpZCUzRCUyMmwyU0pqQ3E3YUthRjRMWV9wcEZxLTQlMjIlMjB2YWx1ZSUzRCUyMiUyMiUyMHN0eWxlJTNEJTIycm91bmRlZCUzRDAlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQmh0bWwlM0QxJTNCZm9udFNpemUlM0QxNiUzQmZpbGxDb2xvciUzRCUyM2UxZDVlNyUzQnN0cm9rZUNvbG9yJTNEJTIzOTY3M2E2JTNCJTIyJTIwcGFyZW50JTNEJTIyMSUyMiUyMHZlcnRleCUzRCUyMjElMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteEdlb21ldHJ5JTIweCUzRCUyMi05MjAlMjIlMjB5JTNEJTIyLTM2MCUyMiUyMHdpZHRoJTNEJTIyNDAlMjIlMjBoZWlnaHQlM0QlMjI0MCUyMiUyMGFzJTNEJTIyZ2VvbWV0cnklMjIlMjAlMkYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZteENlbGwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteENlbGwlMjBpZCUzRCUyMmwyU0pqQ3E3YUthRjRMWV9wcEZxLTUlMjIlMjB2YWx1ZSUzRCUyMiUyMiUyMHN0eWxlJTNEJTIycm91bmRlZCUzRDAlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQmh0bWwlM0QxJTNCZm9udFNpemUlM0QxNiUzQmZpbGxDb2xvciUzRCUyM2UxZDVlNyUzQnN0cm9rZUNvbG9yJTNEJTIzOTY3M2E2JTNCJTIyJTIwcGFyZW50JTNEJTIyMSUyMiUyMHZlcnRleCUzRCUyMjElMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteEdlb21ldHJ5JTIweCUzRCUyMi04ODAlMjIlMjB5JTNEJTIyLTM2MCUyMiUyMHdpZHRoJTNEJTIyNDAlMjIlMjBoZWlnaHQlM0QlMjI0MCUyMiUyMGFzJTNEJTIyZ2VvbWV0cnklMjIlMjAlMkYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZteENlbGwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteENlbGwlMjBpZCUzRCUyMmwyU0pqQ3E3YUthRjRMWV9wcEZxLTYlMjIlMjB2YWx1ZSUzRCUyMiUyMiUyMHN0eWxlJTNEJTIycm91bmRlZCUzRDAlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQmh0bWwlM0QxJTNCZm9udFNpemUlM0QxNiUzQmZpbGxDb2xvciUzRCUyM2Y4Y2VjYyUzQnN0cm9rZUNvbG9yJTNEJTIzYjg1NDUwJTNCJTIyJTIwcGFyZW50JTNEJTIyMSUyMiUyMHZlcnRleCUzRCUyMjElMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteEdlb21ldHJ5JTIweCUzRCUyMi04MDAlMjIlMjB5JTNEJTIyLTQwMCUyMiUyMHdpZHRoJTNEJTIyNDAlMjIlMjBoZWlnaHQlM0QlMjI0MCUyMiUyMGFzJTNEJTIyZ2VvbWV0cnklMjIlMjAlMkYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZteENlbGwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteENlbGwlMjBpZCUzRCUyMmwyU0pqQ3E3YUthRjRMWV9wcEZxLTclMjIlMjB2YWx1ZSUzRCUyMiUyMiUyMHN0eWxlJTNEJTIycm91bmRlZCUzRDAlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQmh0bWwlM0QxJTNCZm9udFNpemUlM0QxNiUzQmZpbGxDb2xvciUzRCUyM2UxZDVlNyUzQnN0cm9rZUNvbG9yJTNEJTIzOTY3M2E2JTNCJTIyJTIwcGFyZW50JTNEJTIyMSUyMiUyMHZlcnRleCUzRCUyMjElMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteEdlb21ldHJ5JTIweCUzRCUyMi03NjAlMjIlMjB5JTNEJTIyLTQwMCUyMiUyMHdpZHRoJTNEJTIyNDAlMjIlMjBoZWlnaHQlM0QlMjI0MCUyMiUyMGFzJTNEJTIyZ2VvbWV0cnklMjIlMjAlMkYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZteENlbGwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteENlbGwlMjBpZCUzRCUyMmwyU0pqQ3E3YUthRjRMWV9wcEZxLTglMjIlMjB2YWx1ZSUzRCUyMnglMjIlMjBzdHlsZSUzRCUyMnRleHQlM0JodG1sJTNEMSUzQnN0cm9rZUNvbG9yJTNEbm9uZSUzQmZpbGxDb2xvciUzRG5vbmUlM0JhbGlnbiUzRGNlbnRlciUzQnZlcnRpY2FsQWxpZ24lM0RtaWRkbGUlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQnJvdW5kZWQlM0QwJTNCZm9udFNpemUlM0QxNiUzQiUyMiUyMHBhcmVudCUzRCUyMjElMjIlMjB2ZXJ0ZXglM0QlMjIxJTIyJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbXhHZW9tZXRyeSUyMHglM0QlMjItOTEwJTIyJTIweSUzRCUyMi00MzAlMjIlMjB3aWR0aCUzRCUyMjYwJTIyJTIwaGVpZ2h0JTNEJTIyMzAlMjIlMjBhcyUzRCUyMmdlb21ldHJ5JTIyJTIwJTJGJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGbXhDZWxsJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbXhDZWxsJTIwaWQlM0QlMjJsMlNKakNxN2FLYUY0TFlfcHBGcS05JTIyJTIwdmFsdWUlM0QlMjJ5JTIyJTIwc3R5bGUlM0QlMjJ0ZXh0JTNCaHRtbCUzRDElM0JzdHJva2VDb2xvciUzRG5vbmUlM0JmaWxsQ29sb3IlM0Rub25lJTNCYWxpZ24lM0RjZW50ZXIlM0J2ZXJ0aWNhbEFsaWduJTNEbWlkZGxlJTNCd2hpdGVTcGFjZSUzRHdyYXAlM0Jyb3VuZGVkJTNEMCUzQmZvbnRTaXplJTNEMTYlM0IlMjIlMjBwYXJlbnQlM0QlMjIxJTIyJTIwdmVydGV4JTNEJTIyMSUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ214R2VvbWV0cnklMjB4JTNEJTIyLTc5MCUyMiUyMHklM0QlMjItNDMwJTIyJTIwd2lkdGglM0QlMjI2MCUyMiUyMGhlaWdodCUzRCUyMjMwJTIyJTIwYXMlM0QlMjJnZW9tZXRyeSUyMiUyMCUyRiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyUyRm14Q2VsbCUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ214Q2VsbCUyMGlkJTNEJTIybDJTSmpDcTdhS2FGNExZX3BwRnEtMTAlMjIlMjB2YWx1ZSUzRCUyMiUyMiUyMHN0eWxlJTNEJTIycm91bmRlZCUzRDAlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQmh0bWwlM0QxJTNCZm9udFNpemUlM0QxNiUzQmZpbGxDb2xvciUzRCUyM2Y4Y2VjYyUzQnN0cm9rZUNvbG9yJTNEJTIzYjg1NDUwJTNCJTIyJTIwcGFyZW50JTNEJTIyMSUyMiUyMHZlcnRleCUzRCUyMjElMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteEdlb21ldHJ5JTIweCUzRCUyMi02NDAlMjIlMjB5JTNEJTIyLTQwMCUyMiUyMHdpZHRoJTNEJTIyNDAlMjIlMjBoZWlnaHQlM0QlMjI0MCUyMiUyMGFzJTNEJTIyZ2VvbWV0cnklMjIlMjAlMkYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZteENlbGwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteENlbGwlMjBpZCUzRCUyMmwyU0pqQ3E3YUthRjRMWV9wcEZxLTExJTIyJTIwdmFsdWUlM0QlMjIlMjIlMjBzdHlsZSUzRCUyMnJvdW5kZWQlM0QwJTNCd2hpdGVTcGFjZSUzRHdyYXAlM0JodG1sJTNEMSUzQmZvbnRTaXplJTNEMTYlM0JmaWxsQ29sb3IlM0QlMjNmOGNlY2MlM0JzdHJva2VDb2xvciUzRCUyM2I4NTQ1MCUzQiUyMiUyMHBhcmVudCUzRCUyMjElMjIlMjB2ZXJ0ZXglM0QlMjIxJTIyJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbXhHZW9tZXRyeSUyMHglM0QlMjItNjAwJTIyJTIweSUzRCUyMi00MDAlMjIlMjB3aWR0aCUzRCUyMjQwJTIyJTIwaGVpZ2h0JTNEJTIyNDAlMjIlMjBhcyUzRCUyMmdlb21ldHJ5JTIyJTIwJTJGJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGbXhDZWxsJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbXhDZWxsJTIwaWQlM0QlMjJsMlNKakNxN2FLYUY0TFlfcHBGcS0xMiUyMiUyMHZhbHVlJTNEJTIyJTIyJTIwc3R5bGUlM0QlMjJyb3VuZGVkJTNEMCUzQndoaXRlU3BhY2UlM0R3cmFwJTNCaHRtbCUzRDElM0Jmb250U2l6ZSUzRDE2JTNCZmlsbENvbG9yJTNEJTIzZTFkNWU3JTNCc3Ryb2tlQ29sb3IlM0QlMjM5NjczYTYlM0IlMjIlMjBwYXJlbnQlM0QlMjIxJTIyJTIwdmVydGV4JTNEJTIyMSUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ214R2VvbWV0cnklMjB4JTNEJTIyLTY0MCUyMiUyMHklM0QlMjItMzYwJTIyJTIwd2lkdGglM0QlMjI0MCUyMiUyMGhlaWdodCUzRCUyMjQwJTIyJTIwYXMlM0QlMjJnZW9tZXRyeSUyMiUyMCUyRiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyUyRm14Q2VsbCUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ214Q2VsbCUyMGlkJTNEJTIybDJTSmpDcTdhS2FGNExZX3BwRnEtMTMlMjIlMjB2YWx1ZSUzRCUyMiUyMiUyMHN0eWxlJTNEJTIycm91bmRlZCUzRDAlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQmh0bWwlM0QxJTNCZm9udFNpemUlM0QxNiUzQmZpbGxDb2xvciUzRCUyM2UxZDVlNyUzQnN0cm9rZUNvbG9yJTNEJTIzOTY3M2E2JTNCJTIyJTIwcGFyZW50JTNEJTIyMSUyMiUyMHZlcnRleCUzRCUyMjElMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteEdlb21ldHJ5JTIweCUzRCUyMi02MDAlMjIlMjB5JTNEJTIyLTM2MCUyMiUyMHdpZHRoJTNEJTIyNDAlMjIlMjBoZWlnaHQlM0QlMjI0MCUyMiUyMGFzJTNEJTIyZ2VvbWV0cnklMjIlMjAlMkYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZteENlbGwlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteENlbGwlMjBpZCUzRCUyMmwyU0pqQ3E3YUthRjRMWV9wcEZxLTE0JTIyJTIwdmFsdWUlM0QlMjIlMjIlMjBzdHlsZSUzRCUyMnJvdW5kZWQlM0QwJTNCd2hpdGVTcGFjZSUzRHdyYXAlM0JodG1sJTNEMSUzQmZvbnRTaXplJTNEMTYlM0JmaWxsQ29sb3IlM0QlMjNmOGNlY2MlM0JzdHJva2VDb2xvciUzRCUyM2I4NTQ1MCUzQiUyMiUyMHBhcmVudCUzRCUyMjElMjIlMjB2ZXJ0ZXglM0QlMjIxJTIyJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbXhHZW9tZXRyeSUyMHglM0QlMjItNTIwJTIyJTIweSUzRCUyMi00MDAlMjIlMjB3aWR0aCUzRCUyMjQwJTIyJTIwaGVpZ2h0JTNEJTIyNDAlMjIlMjBhcyUzRCUyMmdlb21ldHJ5JTIyJTIwJTJGJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGbXhDZWxsJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbXhDZWxsJTIwaWQlM0QlMjJsMlNKakNxN2FLYUY0TFlfcHBGcS0xNSUyMiUyMHZhbHVlJTNEJTIyJTIyJTIwc3R5bGUlM0QlMjJyb3VuZGVkJTNEMCUzQndoaXRlU3BhY2UlM0R3cmFwJTNCaHRtbCUzRDElM0Jmb250U2l6ZSUzRDE2JTNCZmlsbENvbG9yJTNEJTIzZTFkNWU3JTNCc3Ryb2tlQ29sb3IlM0QlMjM5NjczYTYlM0IlMjIlMjBwYXJlbnQlM0QlMjIxJTIyJTIwdmVydGV4JTNEJTIyMSUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ214R2VvbWV0cnklMjB4JTNEJTIyLTUyMCUyMiUyMHklM0QlMjItMzYwJTIyJTIwd2lkdGglM0QlMjI0MCUyMiUyMGhlaWdodCUzRCUyMjQwJTIyJTIwYXMlM0QlMjJnZW9tZXRyeSUyMiUyMCUyRiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQyUyRm14Q2VsbCUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ214Q2VsbCUyMGlkJTNEJTIybDJTSmpDcTdhS2FGNExZX3BwRnEtMTYlMjIlMjB2YWx1ZSUzRCUyMnglMjIlMjBzdHlsZSUzRCUyMnRleHQlM0JodG1sJTNEMSUzQnN0cm9rZUNvbG9yJTNEbm9uZSUzQmZpbGxDb2xvciUzRG5vbmUlM0JhbGlnbiUzRGNlbnRlciUzQnZlcnRpY2FsQWxpZ24lM0RtaWRkbGUlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQnJvdW5kZWQlM0QwJTNCZm9udFNpemUlM0QxNiUzQiUyMiUyMHBhcmVudCUzRCUyMjElMjIlMjB2ZXJ0ZXglM0QlMjIxJTIyJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbXhHZW9tZXRyeSUyMHglM0QlMjItNjMwJTIyJTIweSUzRCUyMi00MzAlMjIlMjB3aWR0aCUzRCUyMjYwJTIyJTIwaGVpZ2h0JTNEJTIyMzAlMjIlMjBhcyUzRCUyMmdlb21ldHJ5JTIyJTIwJTJGJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGbXhDZWxsJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbXhDZWxsJTIwaWQlM0QlMjJsMlNKakNxN2FLYUY0TFlfcHBGcS0xNyUyMiUyMHZhbHVlJTNEJTIyeSU1QiUzQSUyQyUyME5vbmUlNUQlMjIlMjBzdHlsZSUzRCUyMnRleHQlM0JodG1sJTNEMSUzQnN0cm9rZUNvbG9yJTNEbm9uZSUzQmZpbGxDb2xvciUzRG5vbmUlM0JhbGlnbiUzRGNlbnRlciUzQnZlcnRpY2FsQWxpZ24lM0RtaWRkbGUlM0J3aGl0ZVNwYWNlJTNEd3JhcCUzQnJvdW5kZWQlM0QwJTNCZm9udFNpemUlM0QxNiUzQiUyMiUyMHBhcmVudCUzRCUyMjElMjIlMjB2ZXJ0ZXglM0QlMjIxJTIyJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbXhHZW9tZXRyeSUyMHglM0QlMjItNTQwJTIyJTIweSUzRCUyMi00MzAlMjIlMjB3aWR0aCUzRCUyMjgwJTIyJTIwaGVpZ2h0JTNEJTIyMzAlMjIlMjBhcyUzRCUyMmdlb21ldHJ5JTIyJTIwJTJGJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGbXhDZWxsJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDbXhDZWxsJTIwaWQlM0QlMjJsMlNKakNxN2FLYUY0TFlfcHBGcS0xOCUyMiUyMHZhbHVlJTNEJTIyJTIyJTIwc3R5bGUlM0QlMjJlbmRBcnJvdyUzRGNsYXNzaWMlM0JodG1sJTNEMSUzQnJvdW5kZWQlM0QwJTNCZm9udFNpemUlM0QxMiUzQnN0YXJ0U2l6ZSUzRDglM0JlbmRTaXplJTNEOCUzQmN1cnZlZCUzRDElM0IlMjIlMjBwYXJlbnQlM0QlMjIxJTIyJTIwZWRnZSUzRCUyMjElMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NteEdlb21ldHJ5JTIwd2lkdGglM0QlMjI1MCUyMiUyMGhlaWdodCUzRCUyMjUwJTIyJTIwcmVsYXRpdmUlM0QlMjIxJTIyJTIwYXMlM0QlMjJnZW9tZXRyeSUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ214UG9pbnQlMjB4JTNEJTIyLTcxMCUyMiUyMHklM0QlMjItMzYwJTIyJTIwYXMlM0QlMjJzb3VyY2VQb2ludCUyMiUyMCUyRiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ214UG9pbnQlMjB4JTNEJTIyLTY1MCUyMiUyMHklM0QlMjItMzYwJTIyJTIwYXMlM0QlMjJ0YXJnZXRQb2ludCUyMiUyMCUyRiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUy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",
+      "text/plain": [
+       "<IPython.core.display.Image object>"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import IPython\n",
+    "IPython.display.Image(root / \"Images\" / \"2d_example.png\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a25266f6-a5f0-4641-8b53-96ceb4a7e9f6",
+   "metadata": {},
+   "source": [
+    "Lets us look at a more complicated 3d example."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "id": "baf9662c-782f-48dc-a9d0-7c876dc1bd09",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[[0, 0],\n",
+       "        [0, 0],\n",
+       "        [0, 0]],\n",
+       "\n",
+       "       [[0, 0],\n",
+       "        [0, 0],\n",
+       "        [0, 0]]])"
+      ]
+     },
+     "execution_count": 31,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x = np.array([\n",
+    "    [[1, 2],\n",
+    "     [1, 2],\n",
+    "     [1, 2]],\n",
+    "    [[1, 2],\n",
+    "     [1, 2],\n",
+    "     [1, 2]],\n",
+    "])\n",
+    "\n",
+    "y = np.array([1, 2])\n",
+    "x - y[None, None, :]"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
